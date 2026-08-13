@@ -14,7 +14,7 @@ Managed by Sonya Allin and Ryan Pelchat
 
 ## Notes
 
-- Each practice contest will contain 5-6 problems with a distribution as close as possible the following: 
+- Each practice contest will contain 5-6 problems with a distribution close to the following:
   - 1 super easy
   - 2 easy
   - 1 medium
@@ -55,3 +55,21 @@ Managed by Sonya Allin and Ryan Pelchat
 |3.3 a. Binary Search|Easy|[firefly](https://open.kattis.com/problems/firefly)|||
 |3.3 c. Ternary Search and Others|Easy|[ceiling](https://open.kattis.com/problems/ceiling)|||
 |3.3 c. Ternary Search and Others|Hard|[goingtoseed](https://open.kattis.com/problems/goingtoseed)|||
+
+
+### Day 3
+
+|Section|Diffifulty|Problem|Solution|Alternate Solution|
+|---|---|---|---|---|
+
+
+## TODO List:
+
+- [ ] Contest Outlines
+- [ ] Contest Solutions
+- [ ] Contest Setup in Kattis
+- [ ] Contest Slide Explanations
+- [ ] Daily Slides
+- [ ] Daily Summaries
+- [ ] "Price is Right Game"
+- [ ] Contest Alternate Solutions

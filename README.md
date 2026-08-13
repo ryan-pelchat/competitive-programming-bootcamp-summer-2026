@@ -78,12 +78,18 @@ Managed by Sonya Allin and Ryan Pelchat
 |4.3 a. Minimum Spanning Tree (MST) Standard|Easy|[Lost Map](https://open.kattis.com/problems/lostmap)|[Solution](Week_04/Hour_2_Ryan/Homework_Solutions/lostmap.py)||
 |4.4 d. On Weighted Graph: Dijkstra's, Easier|Medium|[texassummers](https://open.kattis.com/problems/texassummers)|||
 |4.5 a. Floyd-Warshall Standard Application (for APSP or SSSP on small graph)|Easy|[allpairspath](https://open.kattis.com/problems/allpairspath)|||
-|4.6 a. Shortest/Longest Paths on DAG|Medium|[safepassage](https://open.kattis.com/problems/safepassage)||| 
+|4.6 a. Shortest/Longest Paths on DAG|Medium|[safepassage](https://open.kattis.com/problems/safepassage)|||
 
 ### Day 5
 
 |Section|Diffifulty|Problem|Solution|Alternate Solution|
 |---|---|---|---|---|
+|5.3 a. Prime Numbers|Medium|[primesieve](https://open.kattis.com/problems/primesieve)|||
+|5.3 f. GCD and/or LCM|Easy|[smallestmultiple](https://open.kattis.com/problems/smallestmultiple)|||
+|5.3 i. Modular Arithmetic|Easy|[anothercandies](https://open.kattis.com/problems/anothercandies)|||
+|7.2 a. Points|Medium|[imperfectgps](https://open.kattis.com/problems/imperfectgps)|||
+|7.2 b. Lines|Medium|[hurricanedanger](https://open.kattis.com/problems/hurricanedanger)|||
+|7.3 a. Polygon Easier|Easy|[convexpolygonearea](https://open.kattis.com/problems/convexpolygonarea)|||
 
 
 ## TODO List:

@@ -27,7 +27,7 @@ Managed by Sonya Allin and Ryan Pelchat
 
 |Day|Summary|Kattis|Topics|
 |---|---|---|---|
-|0|Introduction||- What is ICPC <br> - ICPC Rules <br> - Skills needed to perform <br> - Teambuilding <br> - Useful Python code|
+|0|||- What is ICPC <br> - ICPC Rules <br> - Skills needed to perform <br> - Teambuilding <br> - Useful Python code|
 |1|||- 1.3.3 Introduction to Algorithm Analysis <br> - 2.2 Linear DS with Built-in Libraries <br> - 2.3 Non-Linear DS with Built-in Libraries <br> - 2.4 DS with Our Own Libraries| 
 |2|||- 3.2 Complete Search <br> - 3.3 Divide and Conquer|
 |3|||- 3.4 Greedy <br> - 3.5 Dynamic Programming|

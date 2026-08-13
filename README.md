@@ -38,9 +38,20 @@ Managed by Sonya Allin and Ryan Pelchat
 
 |Section|Diffifulty|Problem|Solution|Alternate Solution|
 |---|---|---|---|---|
-|2.2 h7 Bit Manipulation|Easy|[snapperhard](https://open.kattis.com/problems/snapperhard)|[Solution](practice_contests/day_1/snapperhard.py)||
-|2.4 b. Union-Find Disjoint Sets|Easy|[Union-Find](https://open.kattis.com/problems/unionfind)|[Solution](practice_contests/day_1/unionfind.py)||
-|2.2 j. Stack|Easy|[Pairing Socks](https://open.kattis.com/problems/pairingsocks)|[Solution](practice_contests/day_1/pairingsocks.py)|
-|2.4 c. Tree-related Data Structures|Medium|[fenwick](https://open.kattis.com/problems/fenwick)|||
-|2.3 f. Hash Table (map), Harder|Medium|[snowflakes](https://open.kattis.com/problems/snowflakes)|||
 |2.2 d. Array Manipulation, Harder|Medium|[flagquiz](https://open.kattis.com/problems/flagquiz)|||
+|2.2 j. Stack|Easy|[Pairing Socks](https://open.kattis.com/problems/pairingsocks)|[Solution](practice_contests/day_1/pairingsocks.py)|
+|2.2 h. Bit Manipulation|Easy|[snapperhard](https://open.kattis.com/problems/snapperhard)|[Solution](practice_contests/day_1/snapperhard.py)||
+|2.3 f. Hash Table (map), Harder|Medium|[snowflakes](https://open.kattis.com/problems/snowflakes)|||
+|2.4 b. Union-Find Disjoint Sets|Easy|[Union-Find](https://open.kattis.com/problems/unionfind)|[Solution](practice_contests/day_1/unionfind.py)||
+|2.4 c. Tree-related Data Structures|Medium|[fenwick](https://open.kattis.com/problems/fenwick)|||
+
+### Day 2
+
+|Section|Diffifulty|Problem|Solution|Alternate Solution|
+|---|---|---|---|---|
+|3.2 e. Iterative (Permutation)|Easy|[Veci](https://open.kattis.com/problems/veci)|[Solution](practice_contests/day_2/veci.py)||
+|3.2 i. Mathematical Simulation (Complete Search), Harder|Easy|[Thanos The Hero](https://open.kattis.com/problems/thanosthehero)|[Solution](practice_contests/day_2/thanosthehero.py)||
+|3.2 l. Recursive Backtracking (Harder)|Medium|[dobra](https://open.kattis.com/problems/dobra)|||
+|3.3 a. Binary Search|Easy|[firefly](https://open.kattis.com/problems/firefly)|||
+|3.3 c. Ternary Search and Others|Easy|[ceiling](https://open.kattis.com/problems/ceiling)|||
+|3.3 c. Ternary Search and Others|Hard|[goingtoseed](https://open.kattis.com/problems/goingtoseed)|||

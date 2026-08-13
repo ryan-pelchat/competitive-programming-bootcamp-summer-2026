@@ -3,3 +3,51 @@
 testing.py
 testing2.py
 notes_for_self.md
+
+.venv
+.env
+.DS_Store
+__pycache__/
+
+# Large Data Files
+data/swe_bench_verified_experiments
+data/swe_bench_lite_experiments
+
+# LaTeX Core Auxiliary Files
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
+# Beamer Presentation Files
+*.nav
+*.snm
+*.vrb
+
+# Bibliography & Citation Files (BibTeX/Biber)
+*.bbl
+*.bcf
+*.blg
+*.run.xml
+
+# Glossary & Index Files
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.idx
+*.ilg
+*.ind
+*.ist
+*.sym
+*.syg
+*.syi
+
+# Other Editor/System Files
+*.DS_Store
+*.swp

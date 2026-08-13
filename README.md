@@ -39,9 +39,9 @@ Managed by Sonya Allin and Ryan Pelchat
 
 ### Day 1
 
-|Section|Diffifulty|Problem|Solution|Alternate Solution|
+|Section|Diffifulty|Problem|Solution|Hints|
 |---|---|---|---|---|
-|2.2 d. Array Manipulation, Harder|Medium|[flagquiz](https://open.kattis.com/problems/flagquiz)|||
+|2.2 d. Array Manipulation, Harder|Medium|[flagquiz](https://open.kattis.com/problems/flagquiz)|[Solution](practice_contests/day_1/flagquiz.py)|array of array of strings; be careful; duplicates may exists|
 |2.2 j. Stack|Easy|[Pairing Socks](https://open.kattis.com/problems/pairingsocks)|[Solution](practice_contests/day_1/pairingsocks.py)|
 |2.2 h. Bit Manipulation|Easy|[snapperhard](https://open.kattis.com/problems/snapperhard)|[Solution](practice_contests/day_1/snapperhard.py)||
 |2.3 f. Hash Table (map), Harder|Medium|[snowflakes](https://open.kattis.com/problems/snowflakes)|||

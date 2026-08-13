@@ -25,28 +25,28 @@ Managed by Sonya Allin and Ryan Pelchat
 
 ## Outline
 
-|Day|Summary|Kattis|Topics|
-|---|---|---|---|
-|0|||- What is ICPC <br> - ICPC Rules <br> - Skills needed to perform <br> - Teambuilding <br> - Useful Python code|
-|1|||- 1.3.3 Introduction to Algorithm Analysis <br> - 2.2 Linear DS with Built-in Libraries <br> - 2.3 Non-Linear DS with Built-in Libraries <br> - 2.4 DS with Our Own Libraries| 
-|2|||- 3.2 Complete Search <br> - 3.3 Divide and Conquer|
-|3|||- 3.4 Greedy <br> - 3.5 Dynamic Programming|
-|4|||- 4 Graphs|
-|5|||Select Topics from <br> - 5 Mathematics <br> - 7 (Computational Geometry)|
+|Day|Slides|Speaker Notes|Summary|Kattis|Topics|
+|---|---|---|---|---|---|
+|0|[Slides](slides/day0_slides.pdf)|[Notes](slides/day0_notes.pdf)|[Summary](slides/day0_summary.pdf)||- What is ICPC <br> - ICPC Rules <br> - Skills needed to perform <br> - Teambuilding/Ice breaker|
+|1|[Slides](slides/day1_slides.pdf)|[Notes](slides/day1_notes.pdf)|[Summary](slides/day1_summary.pdf)||- 1.3.3 Introduction to Algorithm Analysis <br> - 2.2 Linear DS with Built-in Libraries <br> - 2.3 Non-Linear DS with Built-in Libraries <br> - 2.4 DS with Our Own Libraries| 
+|2|[Slides](slides/day2_slides.pdf)|[Notes](slides/day2_notes.pdf)|[Summary](slides/day2_summary.pdf)||- 3.2 Complete Search <br> - 3.3 Divide and Conquer|
+|3|[Slides](slides/day3_slides.pdf)|[Notes](slides/day3_notes.pdf)|[Summary](slides/day3_summary.pdf)||- 3.4 Greedy <br> - 3.5 Dynamic Programming|
+|4|[Slides](slides/day4_slides.pdf)|[Notes](slides/day4_notes.pdf)|[Summary](slides/day4_summary.pdf)||- 4 Graphs|
+|5|[Slides](slides/day5_slides.pdf)|[Notes](slides/day5_notes.pdf)|[Summary](slides/day5_summary.pdf)||Select Topics from <br> - 5 Mathematics <br> - 7 (Computational Geometry)|
 
 
 ## Contest Problems
 
 ### Day 1
 
-|Section|Diffifulty|Problem|Solution|Hints|
-|---|---|---|---|---|
-|2.2 d. Array Manipulation, Harder|Medium|[flagquiz](https://open.kattis.com/problems/flagquiz)|[Solution](practice_contests/day_1/flagquiz.py)|array of array of strings; be careful; duplicates may exists|
-|2.2 j. Stack|Easy|[Pairing Socks](https://open.kattis.com/problems/pairingsocks)|[Solution](practice_contests/day_1/pairingsocks.py)|
-|2.2 h. Bit Manipulation|Easy|[snapperhard](https://open.kattis.com/problems/snapperhard)|[Solution](practice_contests/day_1/snapperhard.py)||
-|2.3 f. Hash Table (map), Harder|Medium|[snowflakes](https://open.kattis.com/problems/snowflakes)|||
-|2.4 b. Union-Find Disjoint Sets|Easy|[Union-Find](https://open.kattis.com/problems/unionfind)|[Solution](practice_contests/day_1/unionfind.py)||
-|2.4 c. Tree-related Data Structures|Medium|[fenwick](https://open.kattis.com/problems/fenwick)|||
+|Section|Diffifulty|Problem|Solution|Hints|Slides|
+|---|---|---|---|---|---|
+|2.2 d. Array Manipulation, Harder|Medium|[flagquiz](https://open.kattis.com/problems/flagquiz)|[Solution](practice_contests/day_1/flagquiz.py)|array of array of strings; be careful; duplicates may exists||
+|2.2 j. Stack|Easy|[Pairing Socks](https://open.kattis.com/problems/pairingsocks)|[Solution](practice_contests/day_1/pairingsocks.py)||
+|2.2 h. Bit Manipulation|Easy|[snapperhard](https://open.kattis.com/problems/snapperhard)|[Solution](practice_contests/day_1/snapperhard.py)|||
+|2.3 f. Hash Table (map), Harder|Medium|[snowflakes](https://open.kattis.com/problems/snowflakes)||||
+|2.4 b. Union-Find Disjoint Sets|Easy|[Union-Find](https://open.kattis.com/problems/unionfind)|[Solution](practice_contests/day_1/unionfind.py)|||
+|2.4 c. Tree-related Data Structures|Medium|[fenwick](https://open.kattis.com/problems/fenwick)||||
 
 ### Day 2
 
@@ -94,7 +94,7 @@ Managed by Sonya Allin and Ryan Pelchat
 
 ## TODO List:
 
-- [ ] Contest Outlines
+- [x] Contest Outlines
 - [ ] Contest Solutions
 - [ ] Contest Setup in Kattis
 - [ ] Contest Slide Explanations

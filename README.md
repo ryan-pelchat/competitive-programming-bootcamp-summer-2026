@@ -19,6 +19,9 @@ Managed by Sonya Allin and Ryan Pelchat
   - 2 easy
   - 1 medium
   - 1 hard
+- Homework:
+  - Students finish contest with their team members or on their own
+  - Students read the textbook and summary for the material relevant to the next day
 
 ## Outline
 
@@ -56,8 +59,17 @@ Managed by Sonya Allin and Ryan Pelchat
 |3.3 c. Ternary Search and Others|Easy|[ceiling](https://open.kattis.com/problems/ceiling)|||
 |3.3 c. Ternary Search and Others|Hard|[goingtoseed](https://open.kattis.com/problems/goingtoseed)|||
 
-
 ### Day 3
+
+|Section|Diffifulty|Problem|Solution|Alternate Solution|
+|---|---|---|---|---|
+
+### Day 4
+
+|Section|Diffifulty|Problem|Solution|Alternate Solution|
+|---|---|---|---|---|
+
+### Day 5
 
 |Section|Diffifulty|Problem|Solution|Alternate Solution|
 |---|---|---|---|---|

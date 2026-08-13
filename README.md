@@ -63,6 +63,12 @@ Managed by Sonya Allin and Ryan Pelchat
 
 |Section|Diffifulty|Problem|Solution|Alternate Solution|
 |---|---|---|---|---|
+|3.4 a. Classical|Medium|[classrooms](https://open.kattis.com/problems/classrooms)|||
+|3.4 e. Non Classical, Easier|Easy|[ants](https://open.kattis.com/problems/ants)|||
+|3.5 c. Knapsack (Subset-Sum)| Medium| [knapsack](https://open.kattis.com/problems/knapsack)|||
+|3.5 e. Traveling-Salesman-Problem (TSP)|Medium|[Kattis - beepers](https://open.kattis.com/problems/beepers)|||
+|3.5 f. DP level 1|Easy|[spiderman](https://open.kattis.com/problems/spiderman)|||
+|3.5 g. DP level 2|Medium|[walrusweights](https://open.kattis.com/problems/walrusweights)|||
 
 ### Day 4
 

@@ -1,0 +1,69 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\title{Competitive Programming Bootcamp Day 0\\ICPC Orientation Summary}
+\author{Ryan Pelchat}
+\date{August 2026}
+
+\setlist[itemize]{topsep=2pt,itemsep=2pt,parsep=0pt}
+
+\begin{document}
+\maketitle
+
+\section*{Overview}
+Day 0 introduces the competitive environment that this bootcamp is preparing students to handle. ICPC, the International Collegiate Programming Contest, is a university-level programming contest where teams solve algorithmic problems by writing programs that are submitted to an automatic judge. The contest rewards much more than memorized algorithms. Strong teams combine problem reading, mathematical reasoning, implementation fluency, testing discipline, contest strategy, and teamwork.
+
+In an ICPC-style contest, the final product is an accepted program. A clever idea is not enough if the team cannot implement it correctly. A correct implementation is not enough if it is too slow for the input constraints. A strong individual programmer is not enough if the team cannot share information, manage the keyboard, and make decisions under time pressure. Day 0 therefore focuses on four foundations: understanding the contest, knowing the rules, identifying the skills needed to perform, and beginning to build a team culture.
+
+\section*{What ICPC Is}
+ICPC is an algorithmic programming competition for university students. Teams receive a set of problems, each with a story or formal specification, input format, output format, and constraints. For each problem, the team must design an algorithm, implement it in an allowed programming language, test it, and submit it to the judge. The judge runs the submitted program on hidden tests and returns a verdict such as accepted, wrong answer, time limit, runtime error, or compilation error.
+
+The contest is usually team-based, and the classic ICPC format uses teams of three contestants sharing one computer. This is a major part of the challenge. Only one person can type at a time, so teammates must communicate clearly before and during implementation. While one person codes, another can check logic, prepare tests, read another problem, or track contest time. The best teams treat the shared computer as a scarce resource and use it deliberately.
+
+ICPC-style contests also have a fixed contest clock, often around five hours, and a problem set with varied difficulty. Some problems are intended to be solved quickly by many teams. Others require deeper observations, more advanced algorithms, or careful implementation. Because time is limited, teams must decide not only how to solve a problem, but also whether that problem is worth solving right now.
+
+\section*{Core Rules and Scoring}
+Official rules are published by ICPC and by each regional contest. Students should always read the exact rules for the contest they plan to enter because eligibility, allowed languages, printed materials, contest environment, and site restrictions can vary. The summary below describes common ICPC-style rules and should be checked against the current regional rule page before an official event.
+
+Teams are ranked primarily by the number of problems they solve. Solving more problems is more important than having lower penalty time. If two teams solve the same number of problems, they are usually ranked by total penalty time. For each solved problem, the penalty includes the contest time when the accepted submission was made. Rejected submissions before the accepted run usually add 20 penalty minutes each. Unsolved problems do not add penalty time, even if the team submitted wrong attempts on them. Compilation errors are commonly not counted as 20-minute penalties, but teams should verify the rule for the specific contest.
+
+For example, if a team solves Problem A at minute 18 with no wrong submissions, that problem contributes 18 penalty minutes. If the team solves Problem B at minute 73 after two wrong submissions, that problem contributes 73 plus 40, for 113 penalty minutes. If the team attempts Problem C five times but never solves it, Problem C contributes no penalty time. The team has solved two problems with 131 total penalty minutes.
+
+Contest conduct rules are also important. During an official contest, contestants generally may communicate only with their teammates and authorized contest staff. Clarification questions are submitted through the contest system. Outside communication, unauthorized websites, remote access, and unauthorized electronic devices are generally prohibited. The safe habit is simple: if a rule is unclear, ask a judge or proctor rather than guessing.
+
+\section*{Skills Needed to Perform}
+Competitive programming performance depends on several skill areas. The first is problem reading. Students must identify exactly what is being asked, what the input and output mean, and which edge cases may break a naive solution. Many wrong answers come from misunderstanding a small phrase in the statement.
+
+The second skill is algorithm design. Students need to connect problem constraints to possible time complexities. If the input size is small, brute force may be enough. If the input size is large, the team may need sorting, binary search, graph traversal, dynamic programming, greedy reasoning, data structures, or another technique. The bootcamp will build these patterns, but students should learn to justify why a chosen approach fits the constraints.
+
+The third skill is implementation fluency. In contest conditions, students should be comfortable with their programming language, standard library, input/output patterns, and common templates. Fluency reduces the time spent fighting syntax and increases the time available for reasoning.
+
+The fourth skill is testing and debugging. Before submitting, teams should test sample cases, tiny cases, boundary cases, and cases designed to break the algorithm. After a rejected submission, the team should avoid random edits. A better process is to read the verdict, form a hypothesis, create a test that exposes the suspected issue, and then make a focused change.
+
+The fifth skill is strategy. Good teams do not spend the whole contest on the first hard problem they see. They skim the problem set, estimate difficulty, choose promising targets, and switch when the expected value of continuing becomes too low. Strategy also includes deciding who should code, when to rotate roles, and when to ask for clarification.
+
+\section*{Team Building and Icebreaker}
+Day 0 includes an icebreaker because ICPC is a team contest. Students should form groups of three and create a quick team map. Each person shares their name, preferred programming language, strongest topic, and one topic they want to improve. The group chooses a team name, writes one sentence beginning with "We work best when...", and assigns initial roles: driver, navigator, and strategist.
+
+The driver types and explains implementation choices. The navigator checks logic, watches for bugs, and proposes tests. The strategist tracks time, problem selection, and whether the team should continue or switch. These roles are temporary. Strong teams rotate roles based on the problem and the needs of the moment.
+
+The one-keyboard challenge gives teams a low-stakes way to practice the contest dynamic. A simple task, such as deciding whether two numbers in a list sum to a target, is enough. The point is not the difficulty of the algorithm. The point is that only the driver may touch the keyboard, the navigator must ask useful questions, and the strategist must watch the time. After five minutes, the team rotates roles and reflects on what helped or slowed them down.
+
+Each team should leave Day 0 with a short team contract. Useful questions include: How do we decide who codes first? What phrase means "pause and re-check the idea"? When do we temporarily abandon a problem? How do we handle disagreement? What do we do after a wrong answer? The contract should be short, concrete, and revisable after practice contests.
+
+\section*{Day 0 Takeaways}
+By the end of Day 0, students should be able to explain the basic ICPC-style contest format, describe how scoring works, identify rule details that must be checked for a specific regional contest, and name the main skills needed for strong performance. They should also have an initial team structure and communication protocol. The rest of the bootcamp can then build on this foundation by practicing algorithms, implementation patterns, contest workflows, and team reflection.
+
+\section*{Sources}
+\begin{itemize}
+  \item ICPC Regional Rules 2026/27: \url{https://icpc.global/regionals/rules}
+  \item ICPC World Finals Rules 2026: \url{https://icpc.global/worldfinals/rules/}
+  \item ICPC Regionals overview: \url{https://icpc.global/regionals/regionals}
+\end{itemize}
+
+\end{document}

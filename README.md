@@ -79,7 +79,7 @@ Managed by Sonya Allin and Ryan Pelchat
 |Section|Diffifulty|Problem|Solution|Alternate Solution|
 |---|---|---|---|---|
 |4.2 c. Flood Fill, Harder|Easy|[10kindsofpeople](https://open.kattis.com/problems/10kindsofpeople)|||
-|4.3 a. Minimum Spanning Tree (MST) Standard|Easy|[Lost Map](https://open.kattis.com/problems/lostmap)|[Solution](Week_04/Hour_2_Ryan/Homework_Solutions/lostmap.py)||
+|4.3 a. Minimum Spanning Tree (MST) Standard|Easy|[Lost Map](https://open.kattis.com/problems/lostmap)|[Solution](practice_contests/day_4/lostmap.py)||
 |4.4 d. On Weighted Graph: Dijkstra's, Easier|Medium|[texassummers](https://open.kattis.com/problems/texassummers)|||
 |4.5 a. Floyd-Warshall Standard Application (for APSP or SSSP on small graph)|Easy|[allpairspath](https://open.kattis.com/problems/allpairspath)|||
 |4.6 a. Shortest/Longest Paths on DAG|Medium|[safepassage](https://open.kattis.com/problems/safepassage)|||

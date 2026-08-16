@@ -54,45 +54,46 @@ Managed by Sonya Allin and Ryan Pelchat
 
 ### Day 2
 
-|Section|Diffifulty|Problem|Solution|Alternate Solution|
-|---|---|---|---|---|
-|3.2 e. Iterative (Permutation)|Easy|[Veci](https://open.kattis.com/problems/veci)|[Solution](practice_contests/day_2/veci.py)||
-|3.2 i. Mathematical Simulation (Complete Search), Harder|Easy|[Thanos The Hero](https://open.kattis.com/problems/thanosthehero)|[Solution](practice_contests/day_2/thanosthehero.py)||
-|3.2 l. Recursive Backtracking (Harder)|Medium|[dobra](https://open.kattis.com/problems/dobra)|[Solution](practice_contests/day_2/dobra.py)||
-|3.3 a. Binary Search|Easy|[firefly](https://open.kattis.com/problems/firefly)|[Solution](practice_contests/day_2/firefly.py)||
-|3.3 c. Ternary Search and Others|Easy|[ceiling](https://open.kattis.com/problems/ceiling)|[Solution](practice_contests/day_2/ceiling.py)||
+|Section|Diffifulty|Problem|Solution|Hints|Slides|
+|---|---|---|---|---|---|
+|3.2 e. Iterative (Permutation)|Easy|[Veci](https://open.kattis.com/problems/veci)|[Solution](practice_contests/day_2/veci.py)|||
+|3.2 i. Mathematical Simulation (Complete Search), Harder|Easy|[Thanos The Hero](https://open.kattis.com/problems/thanosthehero)|[Solution](practice_contests/day_2/thanosthehero.py)|||
+|3.2 l. Recursive Backtracking (Harder)|Medium|[dobra](https://open.kattis.com/problems/dobra)|[Solution](practice_contests/day_2/dobra.py)|||
+|3.3 a. Binary Search|Easy|[firefly](https://open.kattis.com/problems/firefly)|[Solution](practice_contests/day_2/firefly.py)|||
+|3.3 c. Ternary Search and Others|Easy|[ceiling](https://open.kattis.com/problems/ceiling)|[Solution](practice_contests/day_2/ceiling.py)|||
 
 ### Day 3
 
-|Section|Diffifulty|Problem|Solution|Alternate Solution|
-|---|---|---|---|---|
-|3.4 a. Classical|Medium|[classrooms](https://open.kattis.com/problems/classrooms)|||
-|3.4 e. Non Classical, Easier|Easy|[ants](https://open.kattis.com/problems/ants)|||
-|3.5 c. Knapsack (Subset-Sum)| Medium| [knapsack](https://open.kattis.com/problems/knapsack)|||
-|3.5 e. Traveling-Salesman-Problem (TSP)|Medium|[beepers](https://open.kattis.com/problems/beepers)|||
-|3.5 f. DP level 1|Easy|[spiderman](https://open.kattis.com/problems/spiderman)|||
-|3.5 g. DP level 2|Medium|[walrusweights](https://open.kattis.com/problems/walrusweights)|||
+|Section|Diffifulty|Problem|Solution|Hints|Slides|
+|---|---|---|---|---|---|
+|3.4 a. Classical|Medium|[classrooms](https://open.kattis.com/problems/classrooms)||||
+|3.4 e. Non Classical, Easier|Easy|[ants](https://open.kattis.com/problems/ants)||||
+|3.5 c. Knapsack (Subset-Sum)| Medium| [knapsack](https://open.kattis.com/problems/knapsack)||||
+|3.5 e. Traveling-Salesman-Problem (TSP)|Medium|[beepers](https://open.kattis.com/problems/beepers)||||
+|3.5 f. DP level 1|Easy|[spiderman](https://open.kattis.com/problems/spiderman)||||
+|3.5 g. DP level 2|Medium|[walrusweights](https://open.kattis.com/problems/walrusweights)||||
 
 ### Day 4
 
-|Section|Diffifulty|Problem|Solution|Alternate Solution|
-|---|---|---|---|---|
-|4.2 c. Flood Fill, Harder|Easy|[10kindsofpeople](https://open.kattis.com/problems/10kindsofpeople)|||
-|4.3 a. Minimum Spanning Tree (MST) Standard|Easy|[Lost Map](https://open.kattis.com/problems/lostmap)|[Solution](practice_contests/day_4/lostmap.py)||
-|4.4 d. On Weighted Graph: Dijkstra's, Easier|Medium|[texassummers](https://open.kattis.com/problems/texassummers)|||
-|4.5 a. Floyd-Warshall Standard Application (for APSP or SSSP on small graph)|Easy|[allpairspath](https://open.kattis.com/problems/allpairspath)|||
-|4.6 a. Shortest/Longest Paths on DAG|Medium|[safepassage](https://open.kattis.com/problems/safepassage)|||
+|Section|Diffifulty|Problem|Solution|Hints|Slides|
+|---|---|---|---|---|---|
+|4.2 c. Flood Fill, Harder|Easy|[10kindsofpeople](https://open.kattis.com/problems/10kindsofpeople)||(intelligent flood fill; just run once to avoid TLE as there are many queries)||
+|4.3 a. Minimum Spanning Tree (MST) Standard|Easy|[Lost Map](https://open.kattis.com/problems/lostmap)|[Solution](practice_contests/day_4/lostmap.py)|(actually just a standard MST problem)||
+|4.4 a. On Unweighted Graph: BFS, Easier|Easy|[grid](https://open.kattis.com/problems/grid)||(modified BFS with step size multiplier)||
+|4.4 d. On Weighted Graph: Dijkstra's, Easier|Medium|[texassummers](https://open.kattis.com/problems/texassummers)||(Dijkstra’s; complete weighted graph; print path)||
+|4.4 d. On Weighted Graph: Dijkstra’s, Easier|Easy|[shortestpath1](https://open.kattis.com/problems/shortestpath1)|| (very standard Dijkstra’s problem)||
+
 
 ### Day 5
 
-|Section|Diffifulty|Problem|Solution|Alternate Solution|
-|---|---|---|---|---|
-|5.3 a. Prime Numbers|Medium|[primesieve](https://open.kattis.com/problems/primesieve)|||
-|5.3 f. GCD and/or LCM|Easy|[smallestmultiple](https://open.kattis.com/problems/smallestmultiple)|||
-|5.3 i. Modular Arithmetic|Easy|[anothercandies](https://open.kattis.com/problems/anothercandies)|||
-|7.2 a. Points|Medium|[imperfectgps](https://open.kattis.com/problems/imperfectgps)|||
-|7.2 b. Lines|Medium|[hurricanedanger](https://open.kattis.com/problems/hurricanedanger)|||
-|7.3 a. Polygon Easier|Easy|[convexpolygonearea](https://open.kattis.com/problems/convexpolygonarea)|||
+|Section|Diffifulty|Problem|Solution|Hints|Slides|
+|---|---|---|---|---|---|
+|5.3 a. Prime Numbers|Medium|[primesieve](https://open.kattis.com/problems/primesieve)||||
+|5.3 f. GCD and/or LCM|Easy|[smallestmultiple](https://open.kattis.com/problems/smallestmultiple)||||
+|5.3 i. Modular Arithmetic|Easy|[anothercandies](https://open.kattis.com/problems/anothercandies)||||
+|7.2 a. Points|Medium|[imperfectgps](https://open.kattis.com/problems/imperfectgps)||||
+|7.2 b. Lines|Medium|[hurricanedanger](https://open.kattis.com/problems/hurricanedanger)||||
+|7.3 a. Polygon Easier|Easy|[convexpolygonearea](https://open.kattis.com/problems/convexpolygonarea)||||
 
 
 ## TODO List:
@@ -104,5 +105,3 @@ Managed by Sonya Allin and Ryan Pelchat
 - [ ] Contest Slide Explanations
 - [ ] Daily Slides
 - [ ] Daily Summaries
-- [ ] "Price is Right Game"
-- [ ] Contest Alternate Solutions

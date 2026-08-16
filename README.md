@@ -23,6 +23,10 @@ Managed by Sonya Allin and Ryan Pelchat
   - Students finish contest with their team members or on their own
   - Students read the textbook and summary for the material relevant to the next day
 
+## Resources
+
+- [CSC148 UofT](https://www.teach.cs.toronto.edu/~csc148h/notes/index.html)
+
 ## Outline
 
 |Day|Slides|Speaker Notes|Summary|Kattis|Topics|

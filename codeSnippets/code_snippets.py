@@ -37,3 +37,30 @@ def calculate_binary_tree_nodes(level_depth):
 
     total_nodes = left_branch_nodes + right_branch_nodes
     return total_nodes
+
+
+def simpleRecursionCounter(start: int, end: int) -> None:
+    # base case
+    if start == end:
+        print(end)
+        return
+    # Recursive case
+    else:
+        print(start)
+        simpleRecursionCounter(start + 1, end)
+        return
+
+
+import math
+
+
+def floatingTrap():
+    a = 0.1
+    b = 0.2
+    c = 0.3
+    print(a + b == c)
+    print(math.isclose(a + b, c))
+
+
+# floatingTrap()
+# # outputs False, True

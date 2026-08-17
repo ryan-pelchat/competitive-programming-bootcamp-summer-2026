@@ -1,0 +1,198 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../solution_slides_common.tex}
+
+\title[smallestmultiple]{Smallest Multiple}
+\subtitle{Day 5 solution walkthrough}
+\author[Solution Deck]{Competitive Programming Bootcamp}
+\date{}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% BEGIN GENERATED STATEMENT INTERPRETATION
+\begin{frame}{Interpret the Word Problem}
+\small
+\sectiontag{Statement excerpts:}
+\begin{tightitemize}
+  \item \textit{``smallest number that is a multiple of every number''}
+  \item \textit{``Input consists of up to 500 test cases''}
+\end{tightitemize}
+
+\vspace{0.18cm}
+\sectiontag{Programming interpretation:}
+\begin{tightitemize}
+  \item For each line, compute the least common multiple of all listed values.
+  \item The pairwise formula uses gcd(a, b) * lcm(a, b) = a * b.
+  \item Fold the list from left to right until every number has been included.
+\end{tightitemize}
+\end{frame}
+% END GENERATED STATEMENT INTERPRETATION
+
+
+
+
+
+
+
+\begin{frame}{Problem Model}
+\small
+\sectiontag{Textbook connection:} CP4 5.3.6 GCD and LCM
+
+\vspace{0.25cm}
+\sectiontag{Core technique:} Repeated LCM using GCD
+
+\vspace{0.25cm}
+\begin{tightitemize}
+  \item Each input line is an independent test case.
+  \item The task is to find the smallest positive integer divisible by every number on the line.
+  \item Input continues until EOF.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{How to Recognize the Approach}
+\begin{tightitemize}
+  \item The smallest number divisible by two integers is their LCM.
+  \item The LCM operation can be folded across a list of numbers.
+  \item GCD gives a safe and direct way to compute each pairwise LCM.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Algorithm}
+\begin{tightitemize}
+  \item Define lcm(a, b) = (a * b) // gcd(a, b).
+  \item For each nonempty input line, parse all integers.
+  \item Set answer to the first number.
+  \item For every remaining number x, set answer = lcm(answer, x).
+  \item Print the final answer.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Walkthrough of the Key State}
+\begin{tightitemize}
+  \item For 2 3 4, lcm(2, 3) = 6 and lcm(6, 4) = 12.
+  \item Associativity lets us combine values one at a time.
+  \item Python's gcd uses the Euclidean algorithm.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Why the Algorithm Is Correct}
+\begin{tightitemize}
+  \item At each step, answer is divisible by all processed numbers.
+  \item The pairwise LCM is the smallest number that preserves divisibility by the previous answer and the new number.
+  \item After all numbers are processed, answer is the smallest common multiple of the whole line.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Complexity and Implementation Notes}
+\small
+\sectiontag{Complexity:} O(K log M) time per line for K numbers of size about M; O(K) memory to parse the line.
+
+\vspace{0.3cm}
+\begin{tightitemize}
+  \item In fixed-width languages, divide before multiplying to reduce overflow risk.
+  \item Empty lines are skipped.
+\end{tightitemize}
+\end{frame}
+
+
+
+% BEGIN GENERATED CODE WALKTHROUGH
+\begin{frame}[fragile]{Code: LCM Helper}
+\scriptsize
+\sectiontag{Source lines:} \texttt{smallestmultiple.py:43--51}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+import sys
+from math import gcd
+
+def lcm(a, b):
+    return (a * b) // gcd(a, b)
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item Python's gcd gives the greatest common divisor efficiently.
+  \item The helper rearranges the gcd-lcm identity to compute lcm(a, b).
+  \item Integer division keeps the answer exact.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Read One Line at a Time}
+\scriptsize
+\sectiontag{Source lines:} \texttt{smallestmultiple.py:54--68}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+def main():
+    for line in sys.stdin:
+
+        numbers = list(map(int, line.split()))
+
+        if not numbers:
+            continue
+
+        answer = numbers[0]
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item Each input line is one independent test case.
+  \item The loop over sys.stdin naturally stops at EOF.
+  \item The first number initializes the running LCM.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Fold the LCM}
+\scriptsize
+\sectiontag{Source lines:} \texttt{smallestmultiple.py:69--82}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+        for i in range(1, len(numbers)):
+            answer = lcm(answer, numbers[i])
+
+        print(answer)
+
+main()
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item Each remaining number is combined with the current answer.
+  \item After the loop, answer is divisible by every number on the line.
+  \item The result is printed immediately for that test case.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+% END GENERATED CODE WALKTHROUGH
+
+\begin{frame}{Source}
+\small
+\sectiontag{Solution file:} \texttt{practice\_contests/day\_5/smallestmultiple.py}
+
+\vspace{0.3cm}
+\sectiontag{Problem:} \url{https://open.kattis.com/problems/smallestmultiple}
+
+\vspace{0.45cm}
+Use this deck with the source code open beside it. The slides explain the reasoning; the code shows the exact input handling and output formatting.
+\end{frame}
+
+\end{document}

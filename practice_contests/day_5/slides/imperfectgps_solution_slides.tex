@@ -1,0 +1,284 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../solution_slides_common.tex}
+
+\title[imperfectgps]{Imperfect GPS}
+\subtitle{Day 5 solution walkthrough}
+\author[Solution Deck]{Competitive Programming Bootcamp}
+\date{}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% BEGIN GENERATED STATEMENT INTERPRETATION
+\begin{frame}{Interpret the Word Problem}
+\small
+\sectiontag{Statement excerpts:}
+\begin{tightitemize}
+  \item \textit{``records its position periodically''}
+  \item \textit{``GPS can underestimate the total distance''}
+\end{tightitemize}
+
+\vspace{0.18cm}
+\sectiontag{Programming interpretation:}
+\begin{tightitemize}
+  \item Compute the true path length from every original segment.
+  \item Compute the GPS path from sampled positions at fixed time intervals plus the final point.
+  \item The output is the percentage of true distance lost by sampling.
+\end{tightitemize}
+\end{frame}
+% END GENERATED STATEMENT INTERPRETATION
+
+
+
+
+
+
+
+\begin{frame}{Problem Model}
+\small
+\sectiontag{Textbook connection:} CP4 7.2.1 Points
+
+\vspace{0.25cm}
+\sectiontag{Core technique:} Geometry simulation with interpolation
+
+\vspace{0.25cm}
+\begin{tightitemize}
+  \item The actual path is the polyline through all recorded runner positions.
+  \item The GPS samples the position every fixed interval and at the final time.
+  \item The answer is the percentage distance lost by GPS sampling.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{How to Recognize the Approach}
+\begin{tightitemize}
+  \item Actual distance is a sum of Euclidean segment lengths.
+  \item GPS samples may fall between known points.
+  \item Constant speed on each segment allows linear interpolation.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Algorithm}
+\begin{tightitemize}
+  \item Compute actual\_distance across consecutive input points.
+  \item Start previous GPS point at the initial position.
+  \item For each GPS time before the final time, find its containing segment.
+  \item Interpolate x and y using the time ratio.
+  \item Add GPS segment distances, then add the final position and compute percentage lost.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Walkthrough of the Key State}
+\begin{tightitemize}
+  \item ratio = (gps\_time - time1) / (time2 - time1).
+  \item current = point1 + ratio * (point2 - point1).
+  \item math.hypot computes stable Euclidean distances.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Why the Algorithm Is Correct}
+\begin{tightitemize}
+  \item Actual distance sums exactly the straight segments described by the input path.
+  \item Interpolation gives the runner's exact position at every GPS sample time under constant segment speed.
+  \item The GPS distance is the polyline through those sampled positions, matching the device model.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Complexity and Implementation Notes}
+\small
+\sectiontag{Complexity:} O(N + T/interval) time and O(N) memory.
+
+\vspace{0.3cm}
+\begin{tightitemize}
+  \item The final GPS point is always included even when the final time is not a multiple of the interval.
+  \item Use floating-point output; Kattis accepts tolerance.
+\end{tightitemize}
+\end{frame}
+
+
+
+% BEGIN GENERATED CODE WALKTHROUGH
+\begin{frame}[fragile]{Code: Read Timed Points}
+\scriptsize
+\sectiontag{Source lines:} \texttt{imperfectgps.py:46--64}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+import sys
+from math import hypot
+
+def distance(x1, y1, x2, y2):
+    return hypot(x2 - x1, y2 - y1)
+
+def main():
+    input = sys.stdin.buffer.readline
+
+    n, interval = map(int, input().split())
+
+    points = []
+
+    for _ in range(n):
+        x, y, time = map(int, input().split())
+        points.append((x, y, time))
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item hypot computes Euclidean segment lengths accurately.
+  \item Each input point stores x, y, and timestamp.
+  \item The interval controls when GPS readings are simulated.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Actual Distance}
+\scriptsize
+\sectiontag{Source lines:} \texttt{imperfectgps.py:66--76}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+actual_distance = 0.0
+
+for i in range(1, n):
+    x1, y1, _ = points[i - 1]
+    x2, y2, _ = points[i]
+
+    actual_distance += distance(x1, y1, x2, y2)
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The real route follows every consecutive input point.
+  \item Each segment length is added to actual\_distance.
+  \item This is the denominator for the final percentage loss.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Initialize GPS Sampling}
+\scriptsize
+\sectiontag{Source lines:} \texttt{imperfectgps.py:78--95}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+previous_x = points[0][0]
+previous_y = points[0][1]
+
+gps_distance = 0.0
+
+gps_time = interval
+
+segment = 0
+
+final_time = points[-1][2]
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The GPS always records the starting position.
+  \item previous\_x and previous\_y track the last recorded GPS point.
+  \item segment identifies which true path segment contains the next GPS timestamp.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Interpolate Regular Samples}
+\scriptsize
+\sectiontag{Source lines:} \texttt{imperfectgps.py:97--135}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+while gps_time < final_time:
+
+    while points[segment + 1][2] < gps_time:
+        segment += 1
+
+    x1, y1, time1 = points[segment]
+    x2, y2, time2 = points[segment + 1]
+
+    ratio = (gps_time - time1) / (time2 - time1)
+
+    current_x = x1 + ratio * (x2 - x1)
+    current_y = y1 + ratio * (y2 - y1)
+
+    gps_distance += distance(previous_x, previous_y, current_x, current_y)
+
+    previous_x = current_x
+    previous_y = current_y
+
+    gps_time += interval
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The loop processes each scheduled GPS time before the finish.
+  \item The segment pointer advances until the timestamp lies in the correct true segment.
+  \item Linear interpolation finds the runner's position at that time before adding GPS distance.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Finalize Percentage Loss}
+\scriptsize
+\sectiontag{Source lines:} \texttt{imperfectgps.py:137--159}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+    final_x = points[-1][0]
+    final_y = points[-1][1]
+
+    gps_distance += distance(previous_x, previous_y, final_x, final_y)
+
+    lost_distance = actual_distance - gps_distance
+
+    percentage_lost = (lost_distance / actual_distance) * 100
+
+    print(percentage_lost)
+
+main()
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The final position is always recorded, even off the regular interval.
+  \item lost\_distance compares actual path length with sampled GPS path length.
+  \item The percentage is printed as a floating-point value.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+% END GENERATED CODE WALKTHROUGH
+
+\begin{frame}{Source}
+\small
+\sectiontag{Solution file:} \texttt{practice\_contests/day\_5/imperfectgps.py}
+
+\vspace{0.3cm}
+\sectiontag{Problem:} \url{https://open.kattis.com/problems/imperfectgps}
+
+\vspace{0.45cm}
+Use this deck with the source code open beside it. The slides explain the reasoning; the code shows the exact input handling and output formatting.
+\end{frame}
+
+\end{document}

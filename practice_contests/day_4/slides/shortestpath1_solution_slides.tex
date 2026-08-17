@@ -1,0 +1,276 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../solution_slides_common.tex}
+
+\title[shortestpath1]{Single Source Shortest Path}
+\subtitle{Day 4 solution walkthrough}
+\author[Solution Deck]{Competitive Programming Bootcamp}
+\date{}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% BEGIN GENERATED STATEMENT INTERPRETATION
+\begin{frame}{Interpret the Word Problem}
+\small
+\sectiontag{Statement excerpts:}
+\begin{tightitemize}
+  \item \textit{``minimum distance from node \$s\$''}
+  \item \textit{``if there is no path from \$s\$ to that node''}
+\end{tightitemize}
+
+\vspace{0.18cm}
+\sectiontag{Programming interpretation:}
+\begin{tightitemize}
+  \item Each test case is a directed graph with nonnegative edge weights.
+  \item Run Dijkstra once from the source, then answer all destination queries from dist.
+  \item The all-zero line ends the input.
+\end{tightitemize}
+\end{frame}
+% END GENERATED STATEMENT INTERPRETATION
+
+
+
+
+
+
+
+\begin{frame}{Problem Model}
+\small
+\sectiontag{Textbook connection:} CP4 4.4.3 Dijkstra's Algorithm
+
+\vspace{0.25cm}
+\sectiontag{Core technique:} Standard Dijkstra with query answering
+
+\vspace{0.25cm}
+\begin{tightitemize}
+  \item Each test case is a directed weighted graph.
+  \item All edge weights are nonnegative.
+  \item After one source is fixed, multiple queries ask for distances from that source.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{How to Recognize the Approach}
+\begin{tightitemize}
+  \item Nonnegative weighted shortest paths point to Dijkstra.
+  \item Multiple queries from the same source should be answered after one run.
+  \item An adjacency list stores only the given directed edges.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Algorithm}
+\begin{tightitemize}
+  \item Read V, E, q, and source s until 0 0 0 0.
+  \item Build AL[u] as a list of (v, w) directed edges.
+  \item Initialize dist[s] = 0 and all others to INF.
+  \item Use a priority queue to process vertices by smallest known distance.
+  \item Relax outgoing edges and answer each query from the final dist array.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Walkthrough of the Key State}
+\begin{tightitemize}
+  \item A stale priority queue entry has d > dist[u] and can be skipped.
+  \item Unreachable query vertices remain at INF.
+  \item The output requires a blank line after each test case.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Why the Algorithm Is Correct}
+\begin{tightitemize}
+  \item Dijkstra's invariant finalizes each popped non-stale vertex at its true shortest distance.
+  \item Every directed edge is relaxed when its source is finalized or improved.
+  \item The distance array therefore answers all post-run queries correctly.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Complexity and Implementation Notes}
+\small
+\sectiontag{Complexity:} O((V + E) log V) time per test case and O(V + E) memory.
+
+\vspace{0.3cm}
+\begin{tightitemize}
+  \item Do not add reverse edges; the graph is directed.
+  \item Use a large integer INF instead of float infinity for integer distances.
+\end{tightitemize}
+\end{frame}
+
+
+
+% BEGIN GENERATED CODE WALKTHROUGH
+\begin{frame}[fragile]{Code: Read Test Case Header}
+\scriptsize
+\sectiontag{Source lines:} \texttt{shortestpath1.py:48--65}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+import sys
+from heapq import heappush, heappop
+
+def main():
+    input = sys.stdin.buffer.readline
+
+    INF = int(1e18)
+
+    output = []
+
+    while True:
+        V, E, q, s = map(int, input().split())
+
+        if V == 0 and E == 0 and q == 0 and s == 0:
+            break
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The loop continues until the sentinel 0 0 0 0.
+  \item INF represents vertices that have not been reached.
+  \item output buffers answers across test cases.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Build Directed Adjacency}
+\scriptsize
+\sectiontag{Source lines:} \texttt{shortestpath1.py:67--78}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+AL = [[] for u in range(V)]
+
+for _ in range(E):
+    u, v, w = map(int, input().split())
+
+    AL[u].append((v, w))
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item AL[u] stores only edges leaving u.
+  \item The edge direction matters; v to u is not added unless it appears separately.
+  \item Each stored pair is destination and weight.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Initialize Dijkstra}
+\scriptsize
+\sectiontag{Source lines:} \texttt{shortestpath1.py:79--93}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+dist = [INF for u in range(V)]
+
+dist[s] = 0
+
+pq = []
+heappush(pq, (0, s))
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item All distances start at INF except the source distance of zero.
+  \item The heap orders vertices by best known distance.
+  \item The initial heap entry starts the search from s.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Relax Edges}
+\scriptsize
+\sectiontag{Source lines:} \texttt{shortestpath1.py:95--122}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+while len(pq) > 0:
+    d, u = heappop(pq)
+
+    if d > dist[u]:
+        continue
+
+    for v, w in AL[u]:
+
+        new_distance = dist[u] + w
+
+        if new_distance >= dist[v]:
+            continue
+
+        dist[v] = new_distance
+
+        heappush(pq, (dist[v], v))
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The smallest queued distance is popped first.
+  \item Stale heap entries are ignored.
+  \item Each edge relaxation improves dist[v] and pushes the new candidate distance.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Answer Queries}
+\scriptsize
+\sectiontag{Source lines:} \texttt{shortestpath1.py:124--143}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+        for _ in range(q):
+            vertex = int(input())
+
+            if dist[vertex] == INF:
+                output.append("Impossible")
+            else:
+                output.append(str(dist[vertex]))
+
+        output.append("")
+
+    sys.stdout.write("\n".join(output))
+
+main()
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item After Dijkstra, each query is just one array lookup.
+  \item Unreached vertices still have INF and print Impossible.
+  \item A blank line is added after each test case as required.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+% END GENERATED CODE WALKTHROUGH
+
+\begin{frame}{Source}
+\small
+\sectiontag{Solution file:} \texttt{practice\_contests/day\_4/shortestpath1.py}
+
+\vspace{0.3cm}
+\sectiontag{Problem:} \url{https://open.kattis.com/problems/shortestpath1}
+
+\vspace{0.45cm}
+Use this deck with the source code open beside it. The slides explain the reasoning; the code shows the exact input handling and output formatting.
+\end{frame}
+
+\end{document}

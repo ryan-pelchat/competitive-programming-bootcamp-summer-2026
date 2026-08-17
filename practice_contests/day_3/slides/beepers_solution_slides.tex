@@ -1,0 +1,273 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../solution_slides_common.tex}
+
+\title[beepers]{Collecting Beepers}
+\subtitle{Day 3 solution walkthrough}
+\author[Solution Deck]{Competitive Programming Bootcamp}
+\date{}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% BEGIN GENERATED STATEMENT INTERPRETATION
+\begin{frame}{Interpret the Word Problem}
+\small
+\sectiontag{Statement excerpts:}
+\begin{tightitemize}
+  \item \textit{``each of the beepers, and return back again''}
+  \item \textit{``never be more than \$10\$ beepers''}
+\end{tightitemize}
+
+\vspace{0.18cm}
+\sectiontag{Programming interpretation:}
+\begin{tightitemize}
+  \item The grid size is irrelevant once coordinates are known.
+  \item With at most 10 beepers, bitmask dynamic programming over visited sets is feasible.
+  \item The state is current point plus the set of collected beepers.
+\end{tightitemize}
+\end{frame}
+% END GENERATED STATEMENT INTERPRETATION
+
+
+
+
+
+
+
+\begin{frame}{Problem Model}
+\small
+\sectiontag{Textbook connection:} CP4 3.5 e. Travelling Salesman Problem
+
+\vspace{0.25cm}
+\sectiontag{Core technique:} Bitmask DP for small TSP
+
+\vspace{0.25cm}
+\begin{tightitemize}
+  \item Start at the robot's home position.
+  \item Visit every beeper exactly once in any order.
+  \item Return to the starting position with minimum Manhattan distance.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{How to Recognize the Approach}
+\begin{tightitemize}
+  \item The number of beepers is small, but all visit orders are factorial.
+  \item A bitmask compactly records which beepers are already collected.
+  \item The current location plus mask fully determines the remaining problem.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Algorithm}
+\begin{tightitemize}
+  \item Store points[0] as the start and points[1..B] as beepers.
+  \item Define dp(current, mask) as minimum remaining route length.
+  \item If mask has all B bits set, return distance back to the start.
+  \item Otherwise try every unvisited beeper, pay travel distance, and recurse.
+  \item Memoize dp with lru\_cache.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Walkthrough of the Key State}
+\begin{tightitemize}
+  \item Bit i of mask corresponds to beeper i at points[i + 1].
+  \item new\_mask = mask | (1 << i) marks a beeper as visited.
+  \item Manhattan distance is abs(dx) + abs(dy).
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Why the Algorithm Is Correct}
+\begin{tightitemize}
+  \item Every feasible tour has a first unvisited beeper chosen from the current state.
+  \item The recurrence tries every such next beeper and takes the minimum.
+  \item Memoization does not change the recurrence; it only avoids recomputation.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Complexity and Implementation Notes}
+\small
+\sectiontag{Complexity:} O(B\textasciicircum{}2 * 2\textasciicircum{}B) time and O(B * 2\textasciicircum{}B) memory.
+
+\vspace{0.3cm}
+\begin{tightitemize}
+  \item The grid dimensions are read but not needed for distance calculations.
+  \item This is the classic small TSP state: position plus visited set.
+\end{tightitemize}
+\end{frame}
+
+
+
+% BEGIN GENERATED CODE WALKTHROUGH
+\begin{frame}[fragile]{Code: Distance Helper}
+\scriptsize
+\sectiontag{Source lines:} \texttt{beepers.py:45--52}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+import sys
+from functools import lru_cache
+
+def distance(a, b):
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item Karel moves only horizontally and vertically.
+  \item Manhattan distance is therefore the exact travel cost between two coordinates.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Read Points and Goal Mask}
+\scriptsize
+\sectiontag{Source lines:} \texttt{beepers.py:54--76}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+def solve_case():
+    width, height = map(int, input().split())
+
+    start_x, start_y = map(int, input().split())
+
+    num_beepers = int(input())
+
+    points = [(start_x, start_y)]
+
+    for _ in range(num_beepers):
+        x, y = map(int, input().split())
+        points.append((x, y))
+
+    all_visited = (1 << num_beepers) - 1
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item points[0] is the starting location; later entries are beepers.
+  \item The all\_visited mask has one bit set for each beeper.
+  \item When the current mask equals all\_visited, collection is complete.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Memoized DP Base Case}
+\scriptsize
+\sectiontag{Source lines:} \texttt{beepers.py:78--95}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+@lru_cache(None)
+def dp(current, mask):
+
+    if mask == all_visited:
+        return distance(points[current], points[0])
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item lru\_cache stores answers for repeated current/mask states.
+  \item The base case returns directly to the starting point.
+  \item This turns the factorial route search into a bitmask DP.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Try Unvisited Beepers}
+\scriptsize
+\sectiontag{Source lines:} \texttt{beepers.py:97--124}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+    best = float("inf")
+
+    for beeper in range(num_beepers):
+
+        if mask & (1 << beeper):
+            continue
+
+        next_point = beeper + 1
+
+        new_mask = mask | (1 << beeper)
+
+        travel = distance(points[current], points[next_point])
+
+        total = travel + dp(next_point, new_mask)
+
+        best = min(best, total)
+
+    return best
+
+return dp(0, 0)
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The loop skips any beeper whose bit is already set.
+  \item new\_mask marks the chosen beeper as collected.
+  \item The best recursive choice is the minimum travel plus future cost.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Run Each Scenario}
+\scriptsize
+\sectiontag{Source lines:} \texttt{beepers.py:127--138}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+def main():
+    global input
+    input = sys.stdin.buffer.readline
+
+    test_cases = int(input())
+
+    for _ in range(test_cases):
+        answer = solve_case()
+        print(answer)
+
+main()
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The main loop processes every Karel scenario independently.
+  \item solve\_case returns the minimum round-trip distance.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+% END GENERATED CODE WALKTHROUGH
+
+\begin{frame}{Source}
+\small
+\sectiontag{Solution file:} \texttt{practice\_contests/day\_3/beepers.py}
+
+\vspace{0.3cm}
+\sectiontag{Problem:} \url{https://open.kattis.com/problems/beepers}
+
+\vspace{0.45cm}
+Use this deck with the source code open beside it. The slides explain the reasoning; the code shows the exact input handling and output formatting.
+\end{frame}
+
+\end{document}

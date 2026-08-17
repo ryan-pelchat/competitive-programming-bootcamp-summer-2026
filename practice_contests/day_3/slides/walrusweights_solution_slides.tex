@@ -1,0 +1,213 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../solution_slides_common.tex}
+
+\title[walrusweights]{Walrus Weights}
+\subtitle{Day 3 solution walkthrough}
+\author[Solution Deck]{Competitive Programming Bootcamp}
+\date{}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% BEGIN GENERATED STATEMENT INTERPRETATION
+\begin{frame}{Interpret the Word Problem}
+\small
+\sectiontag{Statement excerpts:}
+\begin{tightitemize}
+  \item \textit{``as close as possible to \$1\textbackslash{}, 000\$ kg''}
+  \item \textit{``Wallace will pick the greater one''}
+\end{tightitemize}
+
+\vspace{0.18cm}
+\sectiontag{Programming interpretation:}
+\begin{tightitemize}
+  \item Each plate can be used or skipped, so this is subset-sum DP.
+  \item Track which total weights up to 2000 are reachable.
+  \item Search outward from 1000, checking the higher tie first.
+\end{tightitemize}
+\end{frame}
+% END GENERATED STATEMENT INTERPRETATION
+
+
+
+
+
+
+
+\begin{frame}{Problem Model}
+\small
+\sectiontag{Textbook connection:} CP4 3.5 g. DP Level 2 / Subset Sum
+
+\vspace{0.25cm}
+\sectiontag{Core technique:} Subset-sum DP around a target
+
+\vspace{0.25cm}
+\begin{tightitemize}
+  \item Choose any subset of weight plates.
+  \item The target total is as close as possible to 1000.
+  \item If tied, choose the larger total.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{How to Recognize the Approach}
+\begin{tightitemize}
+  \item This is subset sum rather than an optimization over order.
+  \item Only totals from 0 to 2000 matter for closeness to 1000.
+  \item A boolean DP array records which totals are reachable.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Algorithm}
+\begin{tightitemize}
+  \item Initialize dp[0] = True.
+  \item For each plate weight, scan current totals backward.
+  \item If dp[current] is true, set dp[current + weight] to true.
+  \item After processing plates, search outward from 1000.
+  \item Check the higher value before the lower value at each distance.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Walkthrough of the Key State}
+\begin{tightitemize}
+  \item Backward scanning prevents reusing the same plate in one iteration.
+  \item The first reachable total found by outward search has minimum absolute distance.
+  \item Checking higher first enforces the tie-breaking rule.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Why the Algorithm Is Correct}
+\begin{tightitemize}
+  \item After each plate, dp[w] is true exactly when some subset of processed plates sums to w.
+  \item The transition adds the current plate to every previously reachable total.
+  \item The outward search examines totals in nondecreasing distance from 1000, so the first reachable answer is optimal.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Complexity and Implementation Notes}
+\small
+\sectiontag{Complexity:} O(N * 2000) time and O(2000) memory.
+
+\vspace{0.3cm}
+\begin{tightitemize}
+  \item The 2000 cap is safe because anything farther than 1000 from the target cannot beat a value in [0, 2000].
+  \item This is a compact one-dimensional 0/1 DP.
+\end{tightitemize}
+\end{frame}
+
+
+
+% BEGIN GENERATED CODE WALKTHROUGH
+\begin{frame}[fragile]{Code: Read Plates and Base State}
+\scriptsize
+\sectiontag{Source lines:} \texttt{walrusweights.py:40--60}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+import sys
+
+def main():
+    input = sys.stdin.buffer.readline
+
+    n = int(input())
+
+    weights = []
+
+    for _ in range(n):
+        weights.append(int(input()))
+
+    dp = [False] * 2001
+
+    dp[0] = True
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The list stores all plate weights from the input.
+  \item dp[w] means an exact total of w can be made.
+  \item A total of 0 is always reachable before choosing any plates.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Mark Reachable Totals}
+\scriptsize
+\sectiontag{Source lines:} \texttt{walrusweights.py:62--75}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+for weight in weights:
+
+    for current in range(2000 - weight, -1, -1):
+
+        if dp[current]:
+            dp[current + weight] = True
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item For each plate, the DP scans totals backward.
+  \item Backward order guarantees each plate contributes at most once.
+  \item If current is reachable, current + weight becomes reachable.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Search Around 1000}
+\scriptsize
+\sectiontag{Source lines:} \texttt{walrusweights.py:77--99}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+    for distance in range(1001):
+
+        higher = 1000 + distance
+        lower = 1000 - distance
+
+        if higher <= 2000 and dp[higher]:
+            print(higher)
+            return
+
+        if lower >= 0 and dp[lower]:
+            print(lower)
+            return
+
+main()
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item distance grows from 0 outward, so the first reachable answer is closest.
+  \item The higher value is checked before the lower value to satisfy the tie rule.
+  \item Once a reachable total is found, it is printed immediately.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+% END GENERATED CODE WALKTHROUGH
+
+\begin{frame}{Source}
+\small
+\sectiontag{Solution file:} \texttt{practice\_contests/day\_3/walrusweights.py}
+
+\vspace{0.3cm}
+\sectiontag{Problem:} \url{https://open.kattis.com/problems/walrusweights}
+
+\vspace{0.45cm}
+Use this deck with the source code open beside it. The slides explain the reasoning; the code shows the exact input handling and output formatting.
+\end{frame}
+
+\end{document}

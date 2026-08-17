@@ -1,0 +1,339 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../solution_slides_common.tex}
+
+\title[texassummers]{Texas Summers}
+\subtitle{Day 4 solution walkthrough}
+\author[Solution Deck]{Competitive Programming Bootcamp}
+\date{}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% BEGIN GENERATED STATEMENT INTERPRETATION
+\begin{frame}{Interpret the Word Problem}
+\small
+\sectiontag{Statement excerpts:}
+\begin{tightitemize}
+  \item \textit{``minimize the amount they sweat''}
+  \item \textit{``Print the path as indexes of the shady spots''}
+\end{tightitemize}
+
+\vspace{0.18cm}
+\sectiontag{Programming interpretation:}
+\begin{tightitemize}
+  \item A shady spot resets sun exposure, so each walk segment has independent cost.
+  \item The cost of walking between two points is proportional to squared Euclidean distance.
+  \item Find the shortest path from dorm to classroom in the complete graph of spots.
+\end{tightitemize}
+\end{frame}
+% END GENERATED STATEMENT INTERPRETATION
+
+
+
+
+
+
+
+\begin{frame}{Problem Model}
+\small
+\sectiontag{Textbook connection:} CP4 4.4.3 Dijkstra's Algorithm
+
+\vspace{0.25cm}
+\sectiontag{Core technique:} Dijkstra on a complete geometric graph
+
+\vspace{0.25cm}
+\begin{tightitemize}
+  \item Shady spots, dorm, and classroom are vertices.
+  \item Every pair of points has an edge weighted by squared Euclidean distance.
+  \item The output is the sequence of shady spot indices on a shortest path.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{How to Recognize the Approach}
+\begin{tightitemize}
+  \item All edge weights are nonnegative, so Dijkstra applies.
+  \item The graph is complete, so storing every edge is unnecessary.
+  \item Parent pointers are required for path reconstruction.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Algorithm}
+\begin{tightitemize}
+  \item Store all shady spots, then append dorm and classroom.
+  \item Run Dijkstra from the dorm index.
+  \item When visiting u, compute weights from u to every other vertex on demand.
+  \item Relax improved distances and record parent[v] = u.
+  \item After reaching the classroom, follow parents backward and print shady spots.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Walkthrough of the Key State}
+\begin{tightitemize}
+  \item Squared distances preserve ordering compared with actual Euclidean distances.
+  \item The priority queue may contain stale entries, so skip d > dist[u].
+  \item If no shady spot is on the path, print a single dash.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Why the Algorithm Is Correct}
+\begin{tightitemize}
+  \item Dijkstra finalizes vertices in nondecreasing shortest distance because weights are nonnegative.
+  \item On-demand edge generation considers the same complete graph as an explicit adjacency list.
+  \item Parent pointers are updated exactly when a shortest-distance improvement is found.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Complexity and Implementation Notes}
+\small
+\sectiontag{Complexity:} O(V\textasciicircum{}2 log V) time and O(V) memory plus the priority queue.
+
+\vspace{0.3cm}
+\begin{tightitemize}
+  \item Shady spot output indices are the original 0-based input positions.
+  \item The classroom and dorm are not printed as part of the shady path.
+\end{tightitemize}
+\end{frame}
+
+
+
+% BEGIN GENERATED CODE WALKTHROUGH
+\begin{frame}[fragile]{Code: Read Shady Spots}
+\scriptsize
+\sectiontag{Source lines:} \texttt{texassummers.py:46--64}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+import sys
+from heapq import heappush, heappop
+
+def main():
+    input = sys.stdin.buffer.readline
+
+    INF = float("inf")
+
+    n = int(input())
+
+    points = []
+
+    for _ in range(n):
+        x, y = map(int, input().split())
+        points.append((x, y))
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The first n points are shady spots and keep their input indices.
+  \item The coordinate list is the vertex set for the graph.
+  \item These are the only intermediate locations that may appear in the output path.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Add Source and Target}
+\scriptsize
+\sectiontag{Source lines:} \texttt{texassummers.py:66--78}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+dorm = tuple(map(int, input().split()))
+classroom = tuple(map(int, input().split()))
+
+points.append(dorm)
+points.append(classroom)
+
+V = n + 2
+
+s = n
+target = n + 1
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item Dorm and classroom are appended after the shady spots.
+  \item The dorm index is the Dijkstra source; the classroom index is the target.
+  \item V is n + 2 because the graph includes both endpoints.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Initialize Shortest Paths}
+\scriptsize
+\sectiontag{Source lines:} \texttt{texassummers.py:79--92}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+dist = [INF for u in range(V)]
+dist[s] = 0
+
+parent = [-1 for u in range(V)]
+
+pq = []
+heappush(pq, (0, s))
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item dist holds the best known sweat cost from the dorm.
+  \item parent records the predecessor used for path reconstruction.
+  \item The priority queue starts with the dorm at cost zero.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Pop the Next Vertex}
+\scriptsize
+\sectiontag{Source lines:} \texttt{texassummers.py:93--104}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+while len(pq) > 0:
+    d, u = heappop(pq)  # shortest unvisited u
+
+    if d > dist[u]:
+        continue
+
+    if u == target:
+        break
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item Dijkstra processes the currently cheapest unsettled vertex.
+  \item Old heap entries are skipped if they no longer match dist.
+  \item Once the classroom is popped, its shortest path is finalized.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Relax Complete-Graph Edges}
+\scriptsize
+\sectiontag{Source lines:} \texttt{texassummers.py:106--137}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+x1, y1 = points[u]
+
+for v in range(V):
+
+    if u == v:
+        continue
+
+    x2, y2 = points[v]
+
+    w = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)
+
+    if dist[u] + w >= dist[v]:
+        continue
+
+    dist[v] = dist[u] + w
+
+    parent[v] = u
+
+    heappush(pq, (dist[v], v))
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The graph is complete, so neighbors are generated on the fly.
+  \item Squared distance is the edge weight.
+  \item A successful relaxation updates both dist and parent, then queues the improved vertex.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Reconstruct Shady Spots}
+\scriptsize
+\sectiontag{Source lines:} \texttt{texassummers.py:139--161}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+path = []
+
+current = parent[target]
+
+while current != s:
+
+    path.append(current)
+
+    current = parent[current]
+
+path.reverse()
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The parent chain is followed backward from the classroom.
+  \item Only vertices before n are shady spots that should be printed.
+  \item The path is reversed to recover walking order from dorm to class.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Print the Path}
+\scriptsize
+\sectiontag{Source lines:} \texttt{texassummers.py:163--174}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+    if len(path) == 0:
+        print("-")
+
+    else:
+        for spot in path:
+            print(spot)
+
+main()
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item A direct route with no shady spots prints a single dash.
+  \item Otherwise each shady spot index is printed on its own line.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+% END GENERATED CODE WALKTHROUGH
+
+\begin{frame}{Source}
+\small
+\sectiontag{Solution file:} \texttt{practice\_contests/day\_4/texassummers.py}
+
+\vspace{0.3cm}
+\sectiontag{Problem:} \url{https://open.kattis.com/problems/texassummers}
+
+\vspace{0.45cm}
+Use this deck with the source code open beside it. The slides explain the reasoning; the code shows the exact input handling and output formatting.
+\end{frame}
+
+\end{document}

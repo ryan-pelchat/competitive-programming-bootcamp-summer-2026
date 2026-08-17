@@ -1,0 +1,167 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../solution_slides_common.tex}
+
+\title[snapperhard]{Snapper Chain (Hard)}
+\subtitle{Day 1 solution walkthrough}
+\author[Solution Deck]{Competitive Programming Bootcamp}
+\date{}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% BEGIN GENERATED STATEMENT INTERPRETATION
+\begin{frame}{Interpret the Word Problem}
+\small
+\sectiontag{Statement excerpts:}
+\begin{tightitemize}
+  \item \textit{``Snapper devices and chained them together''}
+  \item \textit{``Will the light be on or off''}
+\end{tightitemize}
+
+\vspace{0.18cm}
+\sectiontag{Programming interpretation:}
+\begin{tightitemize}
+  \item The chain state follows the low bits of a binary counter.
+  \item The light is on exactly when all N snappers are on and powered.
+  \item That condition is equivalent to the lowest N bits of K all being 1.
+\end{tightitemize}
+\end{frame}
+% END GENERATED STATEMENT INTERPRETATION
+
+
+
+
+
+
+
+\begin{frame}{Problem Model}
+\small
+\sectiontag{Textbook connection:} CP4 2.2 h / 2.2.3 Bitmask
+
+\vspace{0.25cm}
+\sectiontag{Core technique:} Bitmask pattern recognition
+
+\vspace{0.25cm}
+\begin{tightitemize}
+  \item The chain behaves like a binary counter after each clap.
+  \item The light is on only when all N snappers are on.
+  \item That means the lowest N bits of K must all be 1.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{How to Recognize the Approach}
+\begin{tightitemize}
+  \item Simulating K claps is unnecessary and may be too slow.
+  \item The repeated states reveal powers of two.
+  \item A mask with N low bits set tests the condition in constant time.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Algorithm}
+\begin{tightitemize}
+  \item For each case, build mask = (1 << N) - 1.
+  \item Compute K \& mask to isolate the lowest N bits.
+  \item If the isolated bits equal mask, print ON.
+  \item Otherwise print OFF.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Walkthrough of the Key State}
+\begin{tightitemize}
+  \item For N = 3, mask is binary 111.
+  \item K \& 111 discards all higher bits of K.
+  \item Only values ending in 111 have all three snappers on.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Why the Algorithm Is Correct}
+\begin{tightitemize}
+  \item The snapper chain advances through the same states as binary counting.
+  \item A snapper is powered only if every lower snapper is on, so the final light depends on all N low bits.
+  \item The bitmask check is exactly the condition that all those bits are 1.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Complexity and Implementation Notes}
+\small
+\sectiontag{Complexity:} O(T) time and O(1) extra memory for T test cases.
+
+\vspace{0.3cm}
+\begin{tightitemize}
+  \item Parentheses around 1 << N make the mask expression clear.
+  \item This is a good example of replacing simulation with a state-pattern observation.
+\end{tightitemize}
+\end{frame}
+
+
+
+% BEGIN GENERATED CODE WALKTHROUGH
+\begin{frame}[fragile]{Code: Read Test Cases}
+\scriptsize
+\sectiontag{Source lines:} \texttt{snapperhard.py:39--44}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+import sys
+
+data = sys.stdin.read().strip().splitlines()
+
+for idx, case in enumerate(data[1:]):
+    n, k = list(map(int, case.split()))
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The first input line is the number of cases.
+  \item Each case supplies N, the chain length, and K, the number of snaps.
+  \item enumerate gives the 1-based case labels used in the output.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Test the Low Bits}
+\scriptsize
+\sectiontag{Source lines:} \texttt{snapperhard.py:45--49}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+mask = (1 << n) - 1  # check if all lower bits below n are turned on
+if (k & mask) == mask:  # all n low bits are 1
+    print(f"Case #{idx+1}: ON")
+else:
+    print(f"Case #{idx+1}: OFF")
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The mask contains N ones in binary.
+  \item k \& mask isolates exactly the N snappers that matter.
+  \item If those bits equal the mask, every snapper in the chain is ON.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+% END GENERATED CODE WALKTHROUGH
+
+\begin{frame}{Source}
+\small
+\sectiontag{Solution file:} \texttt{practice\_contests/day\_1/snapperhard.py}
+
+\vspace{0.3cm}
+\sectiontag{Problem:} \url{https://open.kattis.com/problems/snapperhard}
+
+\vspace{0.45cm}
+Use this deck with the source code open beside it. The slides explain the reasoning; the code shows the exact input handling and output formatting.
+\end{frame}
+
+\end{document}

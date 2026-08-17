@@ -1,0 +1,218 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../solution_slides_common.tex}
+
+\title[enlarginghashtables]{Enlarging Hash Tables}
+\subtitle{Day 5 solution walkthrough}
+\author[Solution Deck]{Competitive Programming Bootcamp}
+\date{}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% BEGIN GENERATED STATEMENT INTERPRETATION
+\begin{frame}{Interpret the Word Problem}
+\small
+\sectiontag{Statement excerpts:}
+\begin{tightitemize}
+  \item \textit{``smallest prime number larger than \$2n\$''}
+  \item \textit{``if \$n\$ happens not to be prime''}
+\end{tightitemize}
+
+\vspace{0.18cm}
+\sectiontag{Programming interpretation:}
+\begin{tightitemize}
+  \item For each input n, search upward from 2n + 1 until a prime is found.
+  \item Also test whether the old table size n is prime.
+  \item The output changes only by adding a parenthetical warning for composite n.
+\end{tightitemize}
+\end{frame}
+% END GENERATED STATEMENT INTERPRETATION
+
+
+
+
+
+
+
+\begin{frame}{Problem Model}
+\small
+\sectiontag{Textbook connection:} CP4 5.3.1 Prime Numbers
+
+\vspace{0.25cm}
+\sectiontag{Core technique:} Primality testing by trial division
+
+\vspace{0.25cm}
+\begin{tightitemize}
+  \item For each n, find the smallest prime strictly greater than 2n.
+  \item Also report if the original n is not prime.
+  \item Input ends at n = 0.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{How to Recognize the Approach}
+\begin{tightitemize}
+  \item A candidate larger than 2n can be tested independently for primality.
+  \item After 2, only odd candidates need to be checked.
+  \item Trial division up to sqrt(n) is enough for the input scale.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Algorithm}
+\begin{tightitemize}
+  \item Implement is\_prime(n).
+  \item Reject n < 2, accept n = 2, reject other even numbers.
+  \item Try odd divisors from 3 through isqrt(n).
+  \item For each input n, start candidate = 2n + 1 and advance by 2 until prime.
+  \item Print candidate, adding the warning if n itself is not prime.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Walkthrough of the Key State}
+\begin{tightitemize}
+  \item If n has a divisor above sqrt(n), the paired divisor is below sqrt(n).
+  \item 2n + 1 is always odd, so candidate += 2 preserves odd candidates.
+  \item The original n and enlarged candidate are separate primality checks.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Why the Algorithm Is Correct}
+\begin{tightitemize}
+  \item is\_prime tests all possible factor pairs by checking divisors up to the square root.
+  \item The candidate loop checks increasing integers greater than 2n, skipping only even composites.
+  \item The first prime found is therefore the smallest valid enlarged table size.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Complexity and Implementation Notes}
+\small
+\sectiontag{Complexity:} O(sqrt(C)) per primality test, where C is the candidate value; O(1) memory.
+
+\vspace{0.3cm}
+\begin{tightitemize}
+  \item Use math.isqrt to avoid floating-point square-root issues.
+  \item Remember the exact output format for non-prime original n.
+\end{tightitemize}
+\end{frame}
+
+
+
+% BEGIN GENERATED CODE WALKTHROUGH
+\begin{frame}[fragile]{Code: Primality Test}
+\scriptsize
+\sectiontag{Source lines:} \texttt{enlarginghashtables.py:43--70}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+import sys
+from math import isqrt
+
+def is_prime(n):
+    if n < 2:
+        return False
+
+    if n == 2:
+        return True
+
+    if n % 2 == 0:
+        return False
+
+    limit = isqrt(n)
+
+    for divisor in range(3, limit + 1, 2):
+        if n % divisor == 0:
+            return False
+
+    return True
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item Numbers below 2 and even numbers above 2 are handled immediately.
+  \item Only odd divisors up to sqrt(n) need to be tested.
+  \item If no divisor is found, n is prime.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Choose First Candidate}
+\scriptsize
+\sectiontag{Source lines:} \texttt{enlarginghashtables.py:73--85}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+def main():
+    input = sys.stdin.buffer.readline
+
+    while True:
+        n = int(input())
+
+        if n == 0:
+            break
+
+        candidate = 2 * n + 1
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item Input is processed until the sentinel value 0.
+  \item The first possible new size is strictly greater than twice n.
+  \item 2n + 1 is odd, so later candidates can advance by 2.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Find and Print New Size}
+\scriptsize
+\sectiontag{Source lines:} \texttt{enlarginghashtables.py:87--101}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+        while not is_prime(candidate):
+            candidate += 2
+
+        if is_prime(n):
+            print(candidate)
+
+        else:
+            print(f"{candidate} ({n} is not prime)")
+
+main()
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The loop stops at the first prime candidate, making it the smallest valid new size.
+  \item The original n is tested separately.
+  \item Composite original sizes receive the required note.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+% END GENERATED CODE WALKTHROUGH
+
+\begin{frame}{Source}
+\small
+\sectiontag{Solution file:} \texttt{practice\_contests/day\_5/enlarginghashtables.py}
+
+\vspace{0.3cm}
+\sectiontag{Problem:} \url{https://open.kattis.com/problems/enlarginghashtables}
+
+\vspace{0.45cm}
+Use this deck with the source code open beside it. The slides explain the reasoning; the code shows the exact input handling and output formatting.
+\end{frame}
+
+\end{document}

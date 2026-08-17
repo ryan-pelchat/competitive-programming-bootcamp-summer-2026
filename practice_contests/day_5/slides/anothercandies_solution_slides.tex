@@ -1,0 +1,180 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../solution_slides_common.tex}
+
+\title[anothercandies]{Another Candies}
+\subtitle{Day 5 solution walkthrough}
+\author[Solution Deck]{Competitive Programming Bootcamp}
+\date{}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% BEGIN GENERATED STATEMENT INTERPRETATION
+\begin{frame}{Interpret the Word Problem}
+\small
+\sectiontag{Statement excerpts:}
+\begin{tightitemize}
+  \item \textit{``divide the candies into \$N\$ exactly equal heaps''}
+  \item \textit{``if the candies can be distributed equally''}
+\end{tightitemize}
+
+\vspace{0.18cm}
+\sectiontag{Programming interpretation:}
+\begin{tightitemize}
+  \item The individual redistribution does not matter; only the total candy count matters.
+  \item Equal heaps are possible exactly when total\_candies is divisible by n.
+  \item The blank line before each case must be consumed.
+\end{tightitemize}
+\end{frame}
+% END GENERATED STATEMENT INTERPRETATION
+
+
+
+
+
+
+
+\begin{frame}{Problem Model}
+\small
+\sectiontag{Textbook connection:} CP4 5.3.9 Modular Arithmetic
+
+\vspace{0.25cm}
+\sectiontag{Core technique:} Divisibility by modulo
+
+\vspace{0.25cm}
+\begin{tightitemize}
+  \item Each child owns some number of candies.
+  \item Candies can be redistributed freely.
+  \item Everyone can receive the same amount exactly when the total is divisible by the number of children.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{How to Recognize the Approach}
+\begin{tightitemize}
+  \item The distribution details do not matter; only the sum matters.
+  \item Equal sharing means total mod n equals zero.
+  \item Modulo arithmetic avoids needing to simulate movement.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Algorithm}
+\begin{tightitemize}
+  \item Read the number of test cases.
+  \item Skip the blank line before each case.
+  \item Read n and sum the n candy counts.
+  \item If total \% n == 0, print YES; otherwise print NO.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Walkthrough of the Key State}
+\begin{tightitemize}
+  \item A total of 12 candies among 4 children works because 12 \% 4 = 0.
+  \item A total of 13 among 4 does not work because there is a remainder.
+  \item Large candy counts are fine in Python; other languages may take modulo while summing.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Why the Algorithm Is Correct}
+\begin{tightitemize}
+  \item If total is divisible by n, each child can receive total / n candies.
+  \item If total is not divisible by n, no integer equal share exists.
+  \item The algorithm checks exactly this necessary and sufficient condition.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Complexity and Implementation Notes}
+\small
+\sectiontag{Complexity:} O(N) time per test case and O(1) memory.
+
+\vspace{0.3cm}
+\begin{tightitemize}
+  \item Handle the blank line in the input format.
+  \item No greedy or simulation step is required.
+\end{tightitemize}
+\end{frame}
+
+
+
+% BEGIN GENERATED CODE WALKTHROUGH
+\begin{frame}[fragile]{Code: Read Each Case}
+\scriptsize
+\sectiontag{Source lines:} \texttt{anothercandies.py:37--50}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+import sys
+
+def main():
+    input = sys.stdin.buffer.readline
+
+    test_cases = int(input())
+
+    for _ in range(test_cases):
+
+        input()
+
+        n = int(input())
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The first input line gives the number of test cases.
+  \item Kattis includes a blank line before each case, so input() consumes it.
+  \item n is the number of children and also the divisor for the final check.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Sum and Divide}
+\scriptsize
+\sectiontag{Source lines:} \texttt{anothercandies.py:52--67}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+        total_candies = 0
+
+        for _ in range(n):
+            candies = int(input())
+            total_candies += candies
+
+        if total_candies % n == 0:
+            print("YES")
+        else:
+            print("NO")
+
+main()
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The loop adds every child's candy count to one total.
+  \item total\_candies \% n == 0 is the exact equal-distribution test.
+  \item YES and NO are printed in the required uppercase format.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+% END GENERATED CODE WALKTHROUGH
+
+\begin{frame}{Source}
+\small
+\sectiontag{Solution file:} \texttt{practice\_contests/day\_5/anothercandies.py}
+
+\vspace{0.3cm}
+\sectiontag{Problem:} \url{https://open.kattis.com/problems/anothercandies}
+
+\vspace{0.45cm}
+Use this deck with the source code open beside it. The slides explain the reasoning; the code shows the exact input handling and output formatting.
+\end{frame}
+
+\end{document}

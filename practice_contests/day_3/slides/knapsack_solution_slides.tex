@@ -1,0 +1,275 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../solution_slides_common.tex}
+
+\title[knapsack]{Knapsack}
+\subtitle{Day 3 solution walkthrough}
+\author[Solution Deck]{Competitive Programming Bootcamp}
+\date{}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% BEGIN GENERATED STATEMENT INTERPRETATION
+\begin{frame}{Interpret the Word Problem}
+\small
+\sectiontag{Statement excerpts:}
+\begin{tightitemize}
+  \item \textit{``greatest value that fit into the knapsack''}
+  \item \textit{``indices of the chosen items''}
+\end{tightitemize}
+
+\vspace{0.18cm}
+\sectiontag{Programming interpretation:}
+\begin{tightitemize}
+  \item This is 0/1 knapsack: each item can be taken at most once.
+  \item The score is value, while the constraint is total weight at most capacity.
+  \item Because output requires item indices, the DP must support reconstruction.
+\end{tightitemize}
+\end{frame}
+% END GENERATED STATEMENT INTERPRETATION
+
+
+
+
+
+
+
+\begin{frame}{Problem Model}
+\small
+\sectiontag{Textbook connection:} CP4 3.5 c. Knapsack / Subset-Sum
+
+\vspace{0.25cm}
+\sectiontag{Core technique:} 0/1 knapsack DP with reconstruction
+
+\vspace{0.25cm}
+\begin{tightitemize}
+  \item Each item has a value and weight.
+  \item The capacity limits total selected weight.
+  \item The output asks for selected item indices, not just the best value.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{How to Recognize the Approach}
+\begin{tightitemize}
+  \item Each item can be taken at most once, so this is 0/1 knapsack.
+  \item A one-dimensional dp array gives best value per capacity.
+  \item A chosen table is needed to reconstruct the selected indices.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Algorithm}
+\begin{tightitemize}
+  \item Initialize dp[w] = 0 for every capacity w.
+  \item For each item i, scan capacities backward from capacity to weight.
+  \item If dp[w - weight] + value improves dp[w], update dp[w].
+  \item Mark chosen[i][w] = 1 for improved states.
+  \item Reconstruct by walking items backward and subtracting chosen item weights.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Walkthrough of the Key State}
+\begin{tightitemize}
+  \item Backward capacity order prevents using item i more than once.
+  \item chosen[i][w] means item i was responsible for the best known value at capacity w.
+  \item The reconstruction follows those choices from the final capacity.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Why the Algorithm Is Correct}
+\begin{tightitemize}
+  \item After processing i items, dp[w] is the best value using only those items within capacity w.
+  \item The transition considers both excluding and including the current item.
+  \item The chosen table records exactly the include decisions that produced the final DP value.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Complexity and Implementation Notes}
+\small
+\sectiontag{Complexity:} O(NC) time and O(NC) memory because reconstruction stores choices for every item/capacity.
+
+\vspace{0.3cm}
+\begin{tightitemize}
+  \item Multiple test cases are read until EOF.
+  \item If only the value were required, memory could be reduced further.
+\end{tightitemize}
+\end{frame}
+
+
+
+% BEGIN GENERATED CODE WALKTHROUGH
+\begin{frame}[fragile]{Code: Initialize DP Tables}
+\scriptsize
+\sectiontag{Source lines:} \texttt{knapsack.py:33--42}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+import sys
+
+def solve(capacity, n, items):
+    dp = [0] * (capacity + 1)
+
+    chosen = [bytearray(capacity + 1) for _ in range(n)]
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item dp[w] stores the best value available with capacity w.
+  \item chosen[i][w] remembers that item i improved capacity w.
+  \item The bytearray table keeps reconstruction memory compact.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Process Each Item Once}
+\scriptsize
+\sectiontag{Source lines:} \texttt{knapsack.py:44--53}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+for i in range(n):
+    value, weight = items[i]
+
+    for w in range(capacity, weight - 1, -1):
+        new_value = dp[w - weight] + value
+
+        if new_value > dp[w]:
+            dp[w] = new_value
+            chosen[i][w] = 1
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item For each item, capacities are scanned backward.
+  \item Backward scanning prevents reusing the same item multiple times.
+  \item When taking the item improves value, both dp and chosen are updated.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Reconstruct Chosen Items}
+\scriptsize
+\sectiontag{Source lines:} \texttt{knapsack.py:55--66}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+result = []
+remaining = capacity
+
+for i in range(n - 1, -1, -1):
+    if chosen[i][remaining]:
+        result.append(i)
+        remaining -= items[i][1]
+
+result.reverse()
+
+return result
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item Reconstruction starts at full capacity after all items are processed.
+  \item If chosen[i][remaining] is set, item i was used in the optimal path.
+  \item The result is reversed because reconstruction walks from last item to first.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Read Multiple Cases}
+\scriptsize
+\sectiontag{Source lines:} \texttt{knapsack.py:69--89}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+def main():
+    input = sys.stdin.buffer.readline
+    output = []
+
+    while True:
+        line = input()
+
+        if not line:
+            break
+
+        if not line.strip():
+            continue
+
+        capacity, n = map(int, line.split())
+
+        items = []
+
+        for _ in range(n):
+            value, weight = map(int, input().split())
+            items.append((value, weight))
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The input has an unknown number of test cases, so the loop stops at EOF.
+  \item Blank lines are skipped defensively.
+  \item Each case reads the capacity and all value/weight pairs.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Output Reconstructed Items}
+\scriptsize
+\sectiontag{Source lines:} \texttt{knapsack.py:91--102}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+        result = solve(capacity, n, items)
+
+        output.append(str(len(result)))
+
+        output.append(" ".join(map(str, result)))
+
+    sys.stdout.write("\n".join(output))
+
+main()
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item solve returns the chosen item indices for the case.
+  \item The final output follows Kattis: count first, then selected indices.
+  \item All output lines are buffered and written once.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+% END GENERATED CODE WALKTHROUGH
+
+\begin{frame}{Source}
+\small
+\sectiontag{Solution file:} \texttt{practice\_contests/day\_3/knapsack.py}
+
+\vspace{0.3cm}
+\sectiontag{Problem:} \url{https://open.kattis.com/problems/knapsack}
+
+\vspace{0.45cm}
+Use this deck with the source code open beside it. The slides explain the reasoning; the code shows the exact input handling and output formatting.
+\end{frame}
+
+\end{document}

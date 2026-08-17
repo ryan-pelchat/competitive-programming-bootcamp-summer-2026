@@ -1,0 +1,231 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../solution_slides_common.tex}
+
+\title[snowflakes]{Snowflakes}
+\subtitle{Day 1 solution walkthrough}
+\author[Solution Deck]{Competitive Programming Bootcamp}
+\date{}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% BEGIN GENERATED STATEMENT INTERPRETATION
+\begin{frame}{Interpret the Word Problem}
+\small
+\sectiontag{Statement excerpts:}
+\begin{tightitemize}
+  \item \textit{``bags of uniqueness''}
+  \item \textit{``longest contiguous segment of unique snowflakes''}
+\end{tightitemize}
+
+\vspace{0.18cm}
+\sectiontag{Programming interpretation:}
+\begin{tightitemize}
+  \item A valid package is a contiguous window with no repeated snowflake ID.
+  \item When a duplicate appears inside the current window, the left edge must move past the previous copy.
+  \item The largest valid window length is the maximum package size.
+\end{tightitemize}
+\end{frame}
+% END GENERATED STATEMENT INTERPRETATION
+
+
+
+
+
+
+
+\begin{frame}{Problem Model}
+\small
+\sectiontag{Textbook connection:} CP4 2.3 f. Hash Table (map), Harder
+
+\vspace{0.25cm}
+\sectiontag{Core technique:} Sliding window with a hash map
+
+\vspace{0.25cm}
+\begin{tightitemize}
+  \item We need the longest contiguous sequence with no repeated snowflake ID.
+  \item The current window [left, right] is always duplicate-free.
+  \item A dictionary records the most recent index of each snowflake.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{How to Recognize the Approach}
+\begin{tightitemize}
+  \item Contiguous + unique elements points to a sliding window.
+  \item A hash table tells us whether a duplicate is inside the active window.
+  \item Moving left only forward keeps the total work linear.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Algorithm}
+\begin{tightitemize}
+  \item Initialize left = 0, best = 0, and an empty last\_seen dictionary.
+  \item Scan each snowflake as the right endpoint.
+  \item If this snowflake was last seen at or after left, move left past that position.
+  \item Update last\_seen for the current snowflake.
+  \item Update best with right - left + 1.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Walkthrough of the Key State}
+\begin{tightitemize}
+  \item Duplicates before left are irrelevant because they are outside the current window.
+  \item A duplicate inside the window forces the shortest safe shift of left.
+  \item The window never contains two copies of the same ID after the update.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Why the Algorithm Is Correct}
+\begin{tightitemize}
+  \item The invariant is that the maintained window is always duplicate-free.
+  \item When a duplicate appears, any valid window ending at right must start after the previous copy.
+  \item Since every right endpoint is considered and best stores the largest valid window, the final answer is optimal.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Complexity and Implementation Notes}
+\small
+\sectiontag{Complexity:} O(N) expected time per test case and O(N) memory.
+
+\vspace{0.3cm}
+\begin{tightitemize}
+  \item Use sys.stdin.buffer.read for fast input across many test cases.
+  \item Store positions, not counts, because the exact previous index determines the new left boundary.
+\end{tightitemize}
+\end{frame}
+
+
+
+% BEGIN GENERATED CODE WALKTHROUGH
+\begin{frame}[fragile]{Code: Bulk Input Setup}
+\scriptsize
+\sectiontag{Source lines:} \texttt{snowflakes.py:27--37}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+import sys
+
+def solve():
+    data = list(map(int, sys.stdin.buffer.read().split()))
+    pos = 0
+
+    test_cases = data[pos]
+    pos += 1
+
+    answers = []
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The solution reads all integers once for fast input.
+  \item pos is a cursor into the flat token list.
+  \item answers collects one result per test case before printing.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Start One Window}
+\scriptsize
+\sectiontag{Source lines:} \texttt{snowflakes.py:39--45}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+for _ in range(test_cases):
+    n = data[pos]
+    pos += 1
+
+    last_seen = {}
+    left = 0
+    best = 0
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item Each test case starts with n snowflake IDs.
+  \item last\_seen maps an ID to its most recent index.
+  \item left and best describe the current unique window and best answer.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Slide Past Duplicates}
+\scriptsize
+\sectiontag{Source lines:} \texttt{snowflakes.py:47--57}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+for right in range(n):
+    snowflake = data[pos]
+    pos += 1
+
+    if snowflake in last_seen and last_seen[snowflake] >= left:
+        left = last_seen[snowflake] + 1
+
+    last_seen[snowflake] = right
+
+    best = max(best, right - left + 1)
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item right scans each snowflake exactly once.
+  \item If a duplicate is still inside the window, left jumps after its old position.
+  \item Updating last\_seen after the jump records the newest occurrence.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Store Case Results}
+\scriptsize
+\sectiontag{Source lines:} \texttt{snowflakes.py:59--64}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+        answers.append(str(best))
+
+    print("\n".join(answers))
+
+solve()
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item best is appended after the whole stream for one test case is processed.
+  \item A single joined print avoids repeated output calls.
+  \item solve() is invoked at the bottom to run the workflow.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+% END GENERATED CODE WALKTHROUGH
+
+\begin{frame}{Source}
+\small
+\sectiontag{Solution file:} \texttt{practice\_contests/day\_1/snowflakes.py}
+
+\vspace{0.3cm}
+\sectiontag{Problem:} \url{https://open.kattis.com/problems/snowflakes}
+
+\vspace{0.45cm}
+Use this deck with the source code open beside it. The slides explain the reasoning; the code shows the exact input handling and output formatting.
+\end{frame}
+
+\end{document}

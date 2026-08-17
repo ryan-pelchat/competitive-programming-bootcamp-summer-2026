@@ -1,0 +1,271 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../solution_slides_common.tex}
+
+\title[classrooms]{Classrooms}
+\subtitle{Day 3 solution walkthrough}
+\author[Solution Deck]{Competitive Programming Bootcamp}
+\date{}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% BEGIN GENERATED STATEMENT INTERPRETATION
+\begin{frame}{Interpret the Word Problem}
+\small
+\sectiontag{Statement excerpts:}
+\begin{tightitemize}
+  \item \textit{``classrooms on campus''}
+  \item \textit{``as many activities as possible''}
+\end{tightitemize}
+
+\vspace{0.18cm}
+\sectiontag{Programming interpretation:}
+\begin{tightitemize}
+  \item This is interval scheduling with up to k simultaneous rooms.
+  \item When more than k activities overlap, discard the one that ends latest.
+  \item That keeps earlier finishing activities and leaves more room for the future.
+\end{tightitemize}
+\end{frame}
+% END GENERATED STATEMENT INTERPRETATION
+
+
+
+
+
+
+
+\begin{frame}{Problem Model}
+\small
+\sectiontag{Textbook connection:} CP4 3.4 a. Classical Greedy
+
+\vspace{0.25cm}
+\sectiontag{Core technique:} Greedy interval scheduling with k rooms
+
+\vspace{0.25cm}
+\begin{tightitemize}
+  \item Activities have start and end times.
+  \item At most k activities can be active at the same time.
+  \item Activities ending exactly at another start still overlap in this problem.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{How to Recognize the Approach}
+\begin{tightitemize}
+  \item This is interval scheduling with multiple available rooms.
+  \item When too many intervals overlap, keep the ones that end earliest.
+  \item Priority queues let us remove finished intervals and reject the worst active interval.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Algorithm}
+\begin{tightitemize}
+  \item Sort activities by start time.
+  \item Use a min-heap to expire active activities with end < current start.
+  \item Tentatively accept the current activity.
+  \item Use a max-heap of ending times to remove the active activity that ends latest if active > k.
+  \item Count accepted activities.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Walkthrough of the Key State}
+\begin{tightitemize}
+  \item status marks whether an activity is active, removed, or finished.
+  \item Lazy deletion handles heap entries whose status has changed.
+  \item Removing the latest-ending active interval leaves the most room for future starts.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Why the Algorithm Is Correct}
+\begin{tightitemize}
+  \item At every start time, the accepted active set is feasible after any needed removal.
+  \item If one active interval must be removed, dropping the one with latest end cannot reduce future availability compared with dropping an earlier-ending one.
+  \item By exchange, the greedy active set can be transformed into an optimal active set after each step.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Complexity and Implementation Notes}
+\small
+\sectiontag{Complexity:} O(N log N) time and O(N) memory.
+
+\vspace{0.3cm}
+\begin{tightitemize}
+  \item Use end < start, not end <= start, because equal endpoints overlap here.
+  \item Python max-heap behavior is simulated with negative end times.
+\end{tightitemize}
+\end{frame}
+
+
+
+% BEGIN GENERATED CODE WALKTHROUGH
+\begin{frame}[fragile]{Code: Read and Sort Intervals}
+\scriptsize
+\sectiontag{Source lines:} \texttt{classrooms.py:40--56}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+import sys
+import heapq
+
+def main():
+    input = sys.stdin.buffer.readline
+
+    n, k = map(int, input().split())
+
+    activities = []
+
+    for i in range(n):
+        start, end = map(int, input().split())
+        activities.append((start, end, i))
+
+    activities.sort()
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item Each activity stores start, end, and original index.
+  \item Sorting by start time lets the sweep process events chronologically.
+  \item The original index is used to keep heap entries tied to status values.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Track Active Choices}
+\scriptsize
+\sectiontag{Source lines:} \texttt{classrooms.py:58--72}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+min_heap = []
+
+max_heap = []
+
+status = [0] * n
+
+active = 0
+accepted = 0
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The min-heap identifies accepted activities that have already ended.
+  \item The max-heap identifies the currently active activity with latest ending time.
+  \item status handles stale heap entries after an activity has been removed or finished.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Free Finished Rooms}
+\scriptsize
+\sectiontag{Source lines:} \texttt{classrooms.py:74--82}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+for start, end, index in activities:
+
+    while min_heap and min_heap[0][0] < start:
+        old_end, old_index = heapq.heappop(min_heap)
+
+        if status[old_index] == 1:
+            status[old_index] = 2
+            active -= 1
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item Before accepting a new activity, finished activities stop occupying rooms.
+  \item The strict check old\_end < start matches the statement that equal endpoints still overlap.
+  \item Only status 1 activities affect the active-room count.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Accept or Drop Latest}
+\scriptsize
+\sectiontag{Source lines:} \texttt{classrooms.py:84--104}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+status[index] = 1
+
+heapq.heappush(min_heap, (end, index))
+heapq.heappush(max_heap, (-end, index))
+
+active += 1
+accepted += 1
+
+if active > k:
+
+    while max_heap:
+        neg_end, remove_index = heapq.heappop(max_heap)
+
+        if status[remove_index] == 1:
+            status[remove_index] = 0
+            active -= 1
+            accepted -= 1
+            break
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The new activity is tentatively accepted first.
+  \item If active exceeds k, the latest-ending active activity is removed.
+  \item Removing the latest finisher is the greedy choice that preserves the most flexibility.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Print Accepted Count}
+\scriptsize
+\sectiontag{Source lines:} \texttt{classrooms.py:106--109}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+    print(accepted)
+
+main()
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item accepted has been updated throughout the sweep.
+  \item Only the maximum count is required, not the actual classroom assignment.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+% END GENERATED CODE WALKTHROUGH
+
+\begin{frame}{Source}
+\small
+\sectiontag{Solution file:} \texttt{practice\_contests/day\_3/classrooms.py}
+
+\vspace{0.3cm}
+\sectiontag{Problem:} \url{https://open.kattis.com/problems/classrooms}
+
+\vspace{0.45cm}
+Use this deck with the source code open beside it. The slides explain the reasoning; the code shows the exact input handling and output formatting.
+\end{frame}
+
+\end{document}

@@ -1,0 +1,85 @@
+% Shared Beamer style for practice contest solution walkthroughs.
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{listings}
+
+\definecolor{CPNavy}{HTML}{172033}
+\definecolor{CPBlue}{HTML}{2563EB}
+\definecolor{CPGreen}{HTML}{16A34A}
+\definecolor{CPOrange}{HTML}{F97316}
+\definecolor{CPGray}{HTML}{64748B}
+\definecolor{CPLight}{HTML}{F8FAFC}
+\definecolor{CPCodeBg}{HTML}{F1F5F9}
+\definecolor{CPCodeRule}{HTML}{CBD5E1}
+
+\usetheme{default}
+\usefonttheme{professionalfonts}
+\setbeamertemplate{navigation symbols}{}
+\setbeamersize{text margin left=0.65cm,text margin right=0.65cm}
+\setbeamertemplate{itemize item}{\color{CPBlue}$\blacktriangleright$}
+\setbeamertemplate{itemize subitem}{\color{CPGray}$\triangleright$}
+
+\setbeamercolor{normal text}{fg=CPNavy,bg=white}
+\setbeamercolor{frametitle}{fg=white,bg=CPNavy}
+\setbeamercolor{title}{fg=white,bg=CPNavy}
+\setbeamercolor{subtitle}{fg=CPLight,bg=CPNavy}
+\hypersetup{colorlinks=true,urlcolor=CPBlue}
+
+\setbeamertemplate{frametitle}{%
+  \nointerlineskip%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=0.88cm,dp=0.22cm,leftskip=0.55cm,rightskip=0.35cm]{frametitle}
+    \usebeamerfont{frametitle}\insertframetitle\hfill\small\insertframenumber/\inserttotalframenumber
+  \end{beamercolorbox}%
+}
+
+\setbeamertemplate{footline}{%
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.58\paperwidth,ht=2.4ex,dp=1ex,leftskip=.5cm]{author in head/foot}%
+      \color{CPGray}\insertshorttitle
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.42\paperwidth,ht=2.4ex,dp=1ex,rightskip=.5cm plus1fil]{date in head/foot}%
+      \hfill\color{CPGray}\insertshortauthor
+    \end{beamercolorbox}%
+  }%
+}
+
+\setbeamertemplate{title page}{%
+  \vspace*{1.25cm}
+  \begin{beamercolorbox}[wd=\paperwidth,sep=0.65cm,leftskip=0.15cm,rightskip=0.15cm]{title}
+    {\color{white}\Huge\bfseries\inserttitle\par}
+    \vspace{0.35cm}
+    {\color{CPLight}\Large\insertsubtitle\par}
+    \vspace{0.6cm}
+    {\color{CPLight}\large\insertauthor\par}
+  \end{beamercolorbox}
+  \vfill
+}
+
+\newcommand{\sectiontag}[1]{\textbf{\color{CPBlue}#1}}
+\newenvironment{tightitemize}{\begin{itemize}\small\setlength{\itemsep}{0.18cm}}{\end{itemize}}
+\lstdefinestyle{cpcode}{
+  language=Python,
+  basicstyle=\ttfamily\tiny,
+  keywordstyle=\color{CPBlue}\bfseries,
+  commentstyle=\color{CPGray}\itshape,
+  stringstyle=\color{CPGreen},
+  backgroundcolor=\color{CPCodeBg},
+  frame=single,
+  framerule=0.25pt,
+  rulecolor=\color{CPCodeRule},
+  showstringspaces=false,
+  columns=fullflexible,
+  keepspaces=true,
+  breaklines=true,
+  breakatwhitespace=false,
+  tabsize=4,
+  xleftmargin=0.08cm,
+  xrightmargin=0.08cm,
+  aboveskip=0.08cm,
+  belowskip=0.08cm
+}

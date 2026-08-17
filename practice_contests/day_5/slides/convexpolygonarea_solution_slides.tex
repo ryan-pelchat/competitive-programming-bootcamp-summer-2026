@@ -1,0 +1,214 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../solution_slides_common.tex}
+
+\title[convexpolygonarea]{Convex Polygon Area}
+\subtitle{Day 5 solution walkthrough}
+\author[Solution Deck]{Competitive Programming Bootcamp}
+\date{}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% BEGIN GENERATED STATEMENT INTERPRETATION
+\begin{frame}{Interpret the Word Problem}
+\small
+\sectiontag{Statement excerpts:}
+\begin{tightitemize}
+  \item \textit{``calculate the area of convex polygons''}
+  \item \textit{``the last vertex is connected to the first one''}
+\end{tightitemize}
+
+\vspace{0.18cm}
+\sectiontag{Programming interpretation:}
+\begin{tightitemize}
+  \item The input already gives vertices in polygon order.
+  \item The shoelace formula sums each directed edge contribution.
+  \item Twice the area is an integer, so the final answer ends in .0 or .5.
+\end{tightitemize}
+\end{frame}
+% END GENERATED STATEMENT INTERPRETATION
+
+
+
+
+
+
+
+\begin{frame}{Problem Model}
+\small
+\sectiontag{Textbook connection:} CP4 7.3.3 Area of a Polygon
+
+\vspace{0.25cm}
+\sectiontag{Core technique:} Shoelace formula
+
+\vspace{0.25cm}
+\begin{tightitemize}
+  \item Each test case gives a polygon as ordered vertices.
+  \item The polygon is convex, but the shoelace formula works for any simple ordered polygon.
+  \item The answer is the area printed with .0 or .5.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{How to Recognize the Approach}
+\begin{tightitemize}
+  \item Ordered polygon vertices suggest summing edge contributions.
+  \item Connecting the last vertex back to the first is required.
+  \item Integer coordinates make twice the area an integer.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Algorithm}
+\begin{tightitemize}
+  \item Parse the input line into n coordinate pairs.
+  \item Initialize area2 = 0.
+  \item For each vertex i, let j = (i + 1) mod n.
+  \item Add x\_i*y\_j - y\_i*x\_j to area2.
+  \item Take abs(area2), divide by 2, and print .0 or .5.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Walkthrough of the Key State}
+\begin{tightitemize}
+  \item area2 is twice the signed area.
+  \item The modulo index closes the polygon without a special last-edge case.
+  \item The sign depends on clockwise versus counterclockwise order, so take absolute value.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Why the Algorithm Is Correct}
+\begin{tightitemize}
+  \item The shoelace formula sums the signed area contribution of each directed polygon edge.
+  \item Closing the polygon includes every boundary edge exactly once.
+  \item Taking the absolute value removes orientation, yielding the geometric area.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Complexity and Implementation Notes}
+\small
+\sectiontag{Complexity:} O(N) time and O(N) memory per polygon.
+
+\vspace{0.3cm}
+\begin{tightitemize}
+  \item You can compute while parsing to reduce memory, but storing points keeps the code clear.
+  \item The final area is always an integer or half-integer for integer coordinates.
+\end{tightitemize}
+\end{frame}
+
+
+
+% BEGIN GENERATED CODE WALKTHROUGH
+\begin{frame}[fragile]{Code: Parse One Polygon}
+\scriptsize
+\sectiontag{Source lines:} \texttt{convexpolygonearea.py:41--65}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+import sys
+
+def main():
+    input = sys.stdin.buffer.readline
+
+    test_cases = int(input())
+
+    for _ in range(test_cases):
+
+        values = list(map(int, input().split()))
+
+        n = values[0]
+
+        points = []
+
+        for i in range(n):
+            x = values[1 + 2 * i]
+            y = values[2 + 2 * i]
+
+            points.append((x, y))
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item Each polygon is described on one line as n followed by coordinate pairs.
+  \item The loop converts the flat coordinate list into (x, y) points.
+  \item The points stay in the counter-clockwise order supplied by the input.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Apply Shoelace Formula}
+\scriptsize
+\sectiontag{Source lines:} \texttt{convexpolygonearea.py:67--84}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+area2 = 0
+
+for i in range(n):
+    x1, y1 = points[i]
+
+    x2, y2 = points[(i + 1) % n]
+
+    area2 += x1 * y2 - y1 * x2
+
+area2 = abs(area2)
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item area2 stores twice the signed area.
+  \item Modulo indexing closes the edge from the last vertex back to the first.
+  \item The absolute value removes dependence on orientation.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Print Half-Integer Area}
+\scriptsize
+\sectiontag{Source lines:} \texttt{convexpolygonearea.py:86--94}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+        if area2 % 2 == 0:
+            print(f"{area2 // 2}.0")
+        else:
+            print(f"{area2 // 2}.5")
+
+main()
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item Even area2 values produce an integer area ending in .0.
+  \item Odd area2 values produce a half-integer area ending in .5.
+  \item main() runs the full parser and area calculation.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+% END GENERATED CODE WALKTHROUGH
+
+\begin{frame}{Source}
+\small
+\sectiontag{Solution file:} \texttt{practice\_contests/day\_5/convexpolygonearea.py}
+
+\vspace{0.3cm}
+\sectiontag{Problem:} \url{https://open.kattis.com/problems/convexpolygonarea}
+
+\vspace{0.45cm}
+Use this deck with the source code open beside it. The slides explain the reasoning; the code shows the exact input handling and output formatting.
+\end{frame}
+
+\end{document}

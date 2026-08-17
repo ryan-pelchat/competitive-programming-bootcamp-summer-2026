@@ -1,0 +1,176 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../solution_slides_common.tex}
+
+\title[veci]{Veci}
+\subtitle{Day 2 solution walkthrough}
+\author[Solution Deck]{Competitive Programming Bootcamp}
+\date{}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% BEGIN GENERATED STATEMENT INTERPRETATION
+\begin{frame}{Interpret the Word Problem}
+\small
+\sectiontag{Statement excerpts:}
+\begin{tightitemize}
+  \item \textit{``Find the smallest number larger than X consisting of the same digits as X''}
+  \item \textit{``If there is no such number, output \$0\$''}
+\end{tightitemize}
+
+\vspace{0.18cm}
+\sectiontag{Programming interpretation:}
+\begin{tightitemize}
+  \item The number of digits is small enough to try all digit permutations.
+  \item Only permutations numerically larger than X are candidates.
+  \item The smallest larger candidate is the requested answer.
+\end{tightitemize}
+\end{frame}
+% END GENERATED STATEMENT INTERPRETATION
+
+
+
+
+
+
+
+\begin{frame}{Problem Model}
+\small
+\sectiontag{Textbook connection:} CP4 3.2 e. Iterative Complete Search (Permutation)
+
+\vspace{0.25cm}
+\sectiontag{Core technique:} Generate permutations and choose the smallest larger number
+
+\vspace{0.25cm}
+\begin{tightitemize}
+  \item We are given the digits of a number X.
+  \item We need the smallest number larger than X that uses exactly the same digits.
+  \item If no such number exists, print 0.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{How to Recognize the Approach}
+\begin{tightitemize}
+  \item The number of digits is small enough for permutation generation.
+  \item Every valid answer is one permutation of the original digits.
+  \item A min-heap makes it easy to retrieve the smallest candidate greater than X.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Algorithm}
+\begin{tightitemize}
+  \item Split the input number into characters.
+  \item Generate all full-length permutations of those digits.
+  \item Convert each permutation back to an integer.
+  \item Push only values greater than the original number into a min-heap.
+  \item Print the heap minimum, or 0 if the heap is empty.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Walkthrough of the Key State}
+\begin{tightitemize}
+  \item Duplicate digits may generate duplicate permutations, but duplicates do not affect the minimum.
+  \item The heap stores only candidates that satisfy the greater-than requirement.
+  \item The first pop is therefore the smallest valid rearrangement.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Why the Algorithm Is Correct}
+\begin{tightitemize}
+  \item All digit rearrangements are generated, so every feasible answer is considered.
+  \item Filtering removes exactly the rearrangements that are not larger than X.
+  \item The heap minimum among the remaining values is the required smallest larger number.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Complexity and Implementation Notes}
+\small
+\sectiontag{Complexity:} O(D * D! + D! log(D!)) time and O(D * D!) memory for D digits.
+
+\vspace{0.3cm}
+\begin{tightitemize}
+  \item For larger digit counts, next-permutation would be better, but complete search is enough here.
+  \item Converting through strings keeps the implementation short.
+\end{tightitemize}
+\end{frame}
+
+
+
+% BEGIN GENERATED CODE WALKTHROUGH
+\begin{frame}[fragile]{Code: Generate Candidates}
+\scriptsize
+\sectiontag{Source lines:} \texttt{veci.py:36--46}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+import sys
+import itertools
+import heapq
+
+lines = sys.stdin.read().strip().splitlines()
+ogNumber = int(lines[0])
+numbers = [x for x in lines[0]]
+candidateNumbers = []
+permutations = [
+    int("".join(x)) for x in list(itertools.permutations(numbers, len(numbers)))
+]
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The input number is kept both as an integer and as a list of characters.
+  \item itertools.permutations enumerates all reorderings of those digits.
+  \item Each tuple is joined and converted back to an integer candidate.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Choose the Minimum Larger}
+\scriptsize
+\sectiontag{Source lines:} \texttt{veci.py:48--55}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+for permu in permutations:
+    if permu > ogNumber:
+        heapq.heappush(candidateNumbers, permu)
+
+if not candidateNumbers:
+    print(0)
+else:
+    print(heapq.heappop(candidateNumbers))
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item Only candidates larger than the original number enter the heap.
+  \item A min-heap makes the smallest larger permutation available at the top.
+  \item An empty heap means no valid larger number exists.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+% END GENERATED CODE WALKTHROUGH
+
+\begin{frame}{Source}
+\small
+\sectiontag{Solution file:} \texttt{practice\_contests/day\_2/veci.py}
+
+\vspace{0.3cm}
+\sectiontag{Problem:} \url{https://open.kattis.com/problems/veci}
+
+\vspace{0.45cm}
+Use this deck with the source code open beside it. The slides explain the reasoning; the code shows the exact input handling and output formatting.
+\end{frame}
+
+\end{document}

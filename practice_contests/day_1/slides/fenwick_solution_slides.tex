@@ -1,0 +1,292 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../solution_slides_common.tex}
+
+\title[fenwick]{Fenwick Tree}
+\subtitle{Day 1 solution walkthrough}
+\author[Solution Deck]{Competitive Programming Bootcamp}
+\date{}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% BEGIN GENERATED STATEMENT INTERPRETATION
+\begin{frame}{Interpret the Word Problem}
+\small
+\sectiontag{Statement excerpts:}
+\begin{tightitemize}
+  \item \textit{``updates and prefix sum queries''}
+  \item \textit{``a query for the value of \$a[0] + a[1] + \textbackslash{}ldots + a[i-1]\$''}
+\end{tightitemize}
+
+\vspace{0.18cm}
+\sectiontag{Programming interpretation:}
+\begin{tightitemize}
+  \item The array starts at zero and receives point increments.
+  \item Every query asks for a prefix sum, not a closed interval ending at i.
+  \item A Fenwick tree gives both operations logarithmic time.
+\end{tightitemize}
+\end{frame}
+% END GENERATED STATEMENT INTERPRETATION
+
+
+
+
+
+
+
+\begin{frame}{Problem Model}
+\small
+\sectiontag{Textbook connection:} CP4 2.4.3 Fenwick (Binary Indexed) Tree
+
+\vspace{0.25cm}
+\sectiontag{Core technique:} Fenwick tree for dynamic prefix sums
+
+\vspace{0.25cm}
+\begin{tightitemize}
+  \item The array starts with all zeroes.
+  \item '+ i v' adds v to one position.
+  \item '? i' asks for the sum of positions before i.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{How to Recognize the Approach}
+\begin{tightitemize}
+  \item Naive prefix queries are too slow after many updates.
+  \item Fenwick trees support point updates and prefix sums in logarithmic time.
+  \item The main implementation detail is converting 0-based problem indices to 1-based tree indices.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Algorithm}
+\begin{tightitemize}
+  \item Build a Fenwick tree array ft[1..N].
+  \item update(i, v): add v to ft[i], then jump i += lsone(i).
+  \item query(1, j): accumulate ft[j], then jump j -= lsone(j).
+  \item For '+ i v', call update(i + 1, v).
+  \item For '? i', query positions 1 through i.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Walkthrough of the Key State}
+\begin{tightitemize}
+  \item lsone(x) = x \& -x identifies the size of the chunk controlled by x.
+  \item Update moves upward to every chunk containing the changed index.
+  \item Query moves downward through disjoint chunks that cover the prefix.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Why the Algorithm Is Correct}
+\begin{tightitemize}
+  \item Each Fenwick cell stores the sum of a fixed suffix chunk ending at that index.
+  \item The update visits exactly the chunks that include the changed position.
+  \item The query decomposes a prefix into disjoint stored chunks, so their sum equals the prefix sum.
+\end{tightitemize}
+\end{frame}
+
+\begin{frame}{Complexity and Implementation Notes}
+\small
+\sectiontag{Complexity:} O(log N) per update/query and O(N) memory.
+
+\vspace{0.3cm}
+\begin{tightitemize}
+  \item Use integer arithmetic; sums may exceed small integer ranges in other languages.
+  \item Kattis '? i' is exclusive of i, which is why query(1, i) is correct after 1-based conversion.
+\end{tightitemize}
+\end{frame}
+
+
+
+% BEGIN GENERATED CODE WALKTHROUGH
+\begin{frame}[fragile]{Code: Build Tree Storage}
+\scriptsize
+\sectiontag{Source lines:} \texttt{fenwick.py:34--47}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+class FTree:
+    def __init__(self, f):
+        self.n = len(f)
+        self.ft = [0] * (self.n + 1)
+
+        for i in range(1, self.n + 1):
+            self.ft[i] += f[i - 1]
+
+            parent = i + self.lsone(i)
+
+            if parent <= self.n:
+                self.ft[parent] += self.ft[i]
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The Fenwick array has one extra cell because the structure is 1-based.
+  \item The build loop pushes each value into the parent responsible for a larger range.
+  \item For this problem the initial array is all zeros, but the constructor is general.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Prefix and Range Sum}
+\scriptsize
+\sectiontag{Source lines:} \texttt{fenwick.py:48--65}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+def lsone(self, s):
+    return s & (-s)
+
+def query(self, i, j):
+    if i > 1:
+        return self.query(1, j) - self.query(1, i - 1)
+
+    s = 0
+
+    while j > 0:
+        s += self.ft[j]
+        j -= self.lsone(j)
+
+    return s
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item lsone isolates the size of the range represented by the current tree node.
+  \item A prefix query repeatedly jumps to the previous responsible node.
+  \item A range query is handled as the difference of two prefix sums.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Point Updates}
+\scriptsize
+\sectiontag{Source lines:} \texttt{fenwick.py:67--90}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+def update(self, i, v):
+    while i <= self.n:
+        self.ft[i] += v
+        i += self.lsone(i)
+
+def select(self, k):
+    p = 1
+
+    while (p * 2) <= self.n:
+        p *= 2
+
+    i = 0
+
+    while p > 0:
+        if i + p <= self.n and k > self.ft[i + p]:
+            k -= self.ft[i + p]
+            i += p
+
+        p //= 2
+
+    return i + 1
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item Updating position i means adding the delta to every Fenwick node whose range contains i.
+  \item The index moves upward by lsone(i).
+  \item select is library functionality and is not needed by this Kattis problem.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Apply Updates}
+\scriptsize
+\sectiontag{Source lines:} \texttt{fenwick.py:93--112}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+def main():
+    input = sys.stdin.buffer.readline
+
+    n, q = map(int, input().split())
+
+    ft = FTree([0] * n)
+
+    output = []
+
+    for _ in range(q):
+        command = input().split()
+
+        if command[0] == b"+":
+            index = int(command[1])
+            value = int(command[2])
+
+            ft.update(index + 1, value)
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The Kattis indices are 0-based, so updates use index + 1 inside the tree.
+  \item A plus command increments one array position.
+  \item The Fenwick update pushes the delta to every responsible tree node.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Code: Answer Prefix Queries}
+\scriptsize
+\sectiontag{Source lines:} \texttt{fenwick.py:114--125}
+
+\vspace{0.08cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}[style=cpcode]
+        else:
+            index = int(command[1])
+
+            output.append(str(ft.query(1, index)))
+
+    sys.stdout.write("\n".join(output))
+
+main()
+\end{lstlisting}
+\end{column}
+\begin{column}{0.38\textwidth}
+\sectiontag{What this chunk does}
+\begin{tightitemize}
+  \item The query '? i' maps directly to tree positions 1 through i.
+  \item Each prefix sum is appended to the output buffer.
+  \item All answers are printed once at the end.
+\end{tightitemize}
+\end{column}
+\end{columns}
+\end{frame}
+% END GENERATED CODE WALKTHROUGH
+
+\begin{frame}{Source}
+\small
+\sectiontag{Solution file:} \texttt{practice\_contests/day\_1/fenwick.py}
+
+\vspace{0.3cm}
+\sectiontag{Problem:} \url{https://open.kattis.com/problems/fenwick}
+
+\vspace{0.45cm}
+Use this deck with the source code open beside it. The slides explain the reasoning; the code shows the exact input handling and output formatting.
+\end{frame}
+
+\end{document}

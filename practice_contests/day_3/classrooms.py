@@ -5,8 +5,6 @@ Problem URL: https://open.kattis.com/problems/classrooms
 Difficulty: Medium
 Categories: Greedy, Priority Queue, Sorting
 
-
-Author: Ryan Pelchat
 Date Solved (DD-MM-YYYY): 16-08-2026
 Language: Python3
 

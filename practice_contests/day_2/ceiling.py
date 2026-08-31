@@ -83,6 +83,7 @@ def main():
         # Store the structure of the tree
         shapes.add(get_shape(root))
 
+    # print(shapes)
     print(len(shapes))
 
 

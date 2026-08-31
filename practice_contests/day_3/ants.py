@@ -35,37 +35,70 @@ Memory complexity: O(1), apart from the input.
 
 import sys
 
+data = sys.stdin.read().splitlines()
+# print(data)
+data = data[::-1]
 
-def main():
-    input = sys.stdin.buffer.readline
+caseNumber = int(data.pop())
 
-    cases = int(input())
+while data:
+    pole, antNum = map(int, data.pop().split())
+    antPos = []
 
-    for _ in range(cases):
-        length, n = map(int, input().split())
+    while len(antPos) < antNum:
+        antPos.extend(list(map(int, data.pop().split())))
 
-        # The positions may span multiple input lines
-        positions = []
+    earliest = 0
+    latest = 0
 
-        while len(positions) < n:
-            positions.extend(map(int, input().split()))
+    for pos in antPos:
+        left = pos
+        right = pole - pos
 
-        earliest = 0
-        latest = 0
+        # For the earliest time, the ant takes the shorter path
+        closest_end = min(left, right)
+        earliest = max(earliest, closest_end)
 
-        for position in positions:
-            left = position
-            right = length - position
+        # For the latest time, the ant takes the longer path
+        farthest_end = max(left, right)
+        latest = max(latest, farthest_end)
 
-            # For the earliest time, the ant takes the shorter path
-            closest_end = min(left, right)
-            earliest = max(earliest, closest_end)
-
-            # For the latest time, the ant takes the longer path
-            farthest_end = max(left, right)
-            latest = max(latest, farthest_end)
-
-        print(earliest, latest)
+    print(earliest, latest)
 
 
-main()
+# import sys
+
+
+# def main():
+#     input = sys.stdin.buffer.readline
+
+#     cases = int(input())
+
+#     for _ in range(cases):
+#         length, n = map(int, input().split())
+
+#         # The positions may span multiple input lines
+#         positions = []
+
+#         while len(positions) < n:
+#             positions.extend(map(int, input().split()))
+
+#         earliest = 0
+#         latest = 0
+
+#         for position in positions:
+#             left = position
+#             right = length - position
+
+#             # For the earliest time, the ant takes the shorter path
+#             closest_end = min(left, right)
+#             earliest = max(earliest, closest_end)
+
+#             # For the latest time, the ant takes the longer path
+#             farthest_end = max(left, right)
+#             latest = max(latest, farthest_end)
+
+#         print(earliest, latest)
+
+
+# main()

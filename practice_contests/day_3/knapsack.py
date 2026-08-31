@@ -5,98 +5,120 @@ Problem URL: https://open.kattis.com/problems/knapsack
 Difficulty: Medium
 Categories: Dynamic Programming, 0/1 Knapsack, Reconstruction
 
-
 Date Solved (DD-MM-YYYY): 16-08-2026
 Language: Python3
 
 
 Approach:
-Use dynamic programming where dp[w] stores the maximum value that can
-be obtained with a knapsack capacity of w.
+Use a 2D dynamic programming table where dp[i][w] stores the maximum
+value that can be obtained using a subset of the first 'i' items and
+a knapsack capacity of 'w'.
 
-For each item, go through the capacities backwards. Going backwards
-ensures that each item can only be used once.
+For each item and each capacity, we evaluate two choices:
+1. Leave the item (take the value from the row directly above).
+2. Take the item (add its value to the best value of the remaining capacity).
+The DP table stores the maximum of these two choices.
 
-We also store whether each item was chosen when improving a DP state.
-After finishing the DP, work backwards through the items to reconstruct
-which item indices were used.
+To reconstruct the chosen items, we start at the bottom-right of the table.
+If dp[i][w] is different from dp[i-1][w], it means item i was taken. We
+record the item, subtract its weight from our current capacity, and move up.
 
 
 Notes:
-The backwards loop is important for 0/1 Knapsack. If we looped forward,
-the same item could be used multiple times.
+This is the classic, readable 2D array implementation of the 0/1 Knapsack
+problem. While less memory-efficient than the 1D backwards-looping approach,
+it explicitly maps out the decision-making process and makes the item
+reconstruction phase highly intuitive.
 
-Time complexity: O(n * C)
-Memory complexity: O(n * C) for reconstructing the chosen items.
+Time complexity: O(n * C) where n is the number of items and C is the capacity.
+Memory complexity: O(n * C) to store the 2D DP table.
 """
 
 import sys
 
 
-def solve(capacity, n, items):
-    # dp[w] = best value possible with capacity w
-    dp = [0] * (capacity + 1)
+def solve(max_capacity, num_items, items):
+    # Create a 2D grid filled with 0s.
+    # Rows (0 to num_items) represent how many items we are allowed to consider.
+    # Columns (0 to max_capacity) represent the current weight capacity of the bag.
+    # dp[i][w] = The maximum value we can get using the first 'i' items with a bag of size 'w'.
+    dp = [[0 for _ in range(max_capacity + 1)] for _ in range(num_items + 1)]
 
-    # chosen[i][w] tells us if item i was used
-    # when we improved the answer for capacity w
-    chosen = [bytearray(capacity + 1) for _ in range(n)]
+    # 1. BUILD THE DP TABLE (Moving Forwards)
+    for i in range(1, num_items + 1):
+        # We use i-1 because our items list is 0-indexed, but our DP table is 1-indexed
+        item_value, item_weight = items[i - 1]
 
-    for i in range(n):
-        value, weight = items[i]
+        for current_capacity in range(1, max_capacity + 1):
 
-        # Go backwards so this item cannot be used more than once
-        for w in range(capacity, weight - 1, -1):
-            new_value = dp[w - weight] + value
+            # Case A: The item is too heavy to fit in the current bag
+            if item_weight > current_capacity:
+                # We are forced to leave it. Our best value is whatever we had
+                # before we considered this item.
+                dp[i][current_capacity] = dp[i - 1][current_capacity]
 
-            if new_value > dp[w]:
-                dp[w] = new_value
-                chosen[i][w] = 1
+            # Case B: The item fits! We have a choice to make.
+            else:
+                # Option 1: Leave it
+                leave_value = dp[i - 1][current_capacity]
 
-    # Work backwards to find which items were chosen
-    result = []
-    remaining = capacity
+                # Option 2: Take it (Value of item + best value of the remaining space)
+                remaining_space = current_capacity - item_weight
+                take_value = item_value + dp[i - 1][remaining_space]
 
-    for i in range(n - 1, -1, -1):
-        if chosen[i][remaining]:
-            result.append(i)
-            remaining -= items[i][1]
+                # The DP table stores whichever choice gave us more value
+                dp[i][current_capacity] = max(leave_value, take_value)
 
-    result.reverse()
+    # 2. RECONSTRUCT THE CHOSEN ITEMS (Working Backwards)
+    # The bottom-right cell of our grid now holds the absolute best value possible.
+    # To find out WHICH items got us there, we trace our steps backward.
 
-    return result
+    chosen_items = []
+    current_cap = max_capacity
+
+    for i in range(num_items, 0, -1):
+        # If the value changed from the row above it, it means we MUST have chosen it.
+        if dp[i][current_cap] != dp[i - 1][current_cap]:
+            item_index = i - 1
+            chosen_items.append(item_index)
+
+            # Subtract the item's weight from our capacity as we move up
+            item_weight = items[item_index][1]
+            current_cap -= item_weight
+
+    # We found them in reverse order, so flip the list to print them in original order
+    chosen_items.reverse()
+
+    return chosen_items
 
 
 def main():
-    input = sys.stdin.buffer.readline
-    output = []
+    # Read all inputs at once (cleaner for Kattis EOF parsing)
+    input_data = sys.stdin.read().split()
+    if not input_data:
+        return
 
-    # There can be multiple test cases until EOF
+    iterator = iter(input_data)
+
     while True:
-        line = input()
+        try:
+            capacity = int(next(iterator))
+            n = int(next(iterator))
 
-        if not line:
-            break
+            items = []
+            for _ in range(n):
+                val = int(next(iterator))
+                weight = int(next(iterator))
+                items.append((val, weight))
 
-        if not line.strip():
-            continue
+            result = solve(capacity, n, items)
 
-        capacity, n = map(int, line.split())
+            print(len(result))
+            print(" ".join(map(str, result)))
 
-        items = []
-
-        for _ in range(n):
-            value, weight = map(int, input().split())
-            items.append((value, weight))
-
-        result = solve(capacity, n, items)
-
-        # First print how many items were selected
-        output.append(str(len(result)))
-
-        # Then print their original 0-based indices
-        output.append(" ".join(map(str, result)))
-
-    sys.stdout.write("\n".join(output))
+        except StopIteration:
+            break  # No more test cases left
 
 
-main()
+if __name__ == "__main__":
+    main()
